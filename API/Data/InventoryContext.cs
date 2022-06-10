@@ -9,19 +9,25 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Data
 {
-    public class InventoryContext : IdentityDbContext<User>
+    public class InventoryContext : IdentityDbContext<User, Role, int>
     {
         public InventoryContext(DbContextOptions options) : base(options)
         {
 
         }
-        // public DbSet<> MyProperty { get; set; }
+        // public DbSet<Product> Products { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.Entity<IdentityRole>()
+            // builder.Entity<Product>()
+            //     .HasOne(p => p.User)
+            //     .WithMany(u => u.Products)
+            //     .HasForeignKey(n => n.UserId)
+            //     .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Role>()
                 .HasData(
-                    new IdentityRole{Name = "Member", NormalizedName = "MEMBER"}
+                    new Role{Id = 1, Name = "Member", NormalizedName = "MEMBER"}
                 );
         }
     }

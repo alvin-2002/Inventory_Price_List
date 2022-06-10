@@ -63,7 +63,7 @@ namespace API.Controllers
         public async Task<ActionResult<UserDto>> GetCurrentUser()
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-
+            Console.WriteLine(user.Products);
             return new UserDto
             {
                 Email = user.Email,
