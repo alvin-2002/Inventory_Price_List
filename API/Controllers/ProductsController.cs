@@ -64,7 +64,7 @@ namespace API.Controllers
 
             var result = await _context.SaveChangesAsync() > 0;
             if (result) return StatusCode(201);
-            return BadRequest(new ProblemDetails{Title = "Problem removing item from a basket"});
+            return BadRequest(new ProblemDetails{Title = "Problem removing item from a user"});
         }
         
     }

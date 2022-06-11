@@ -10,11 +10,11 @@ namespace API.DTOs
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public long TotalPrice { get; set; }
+        public decimal TotalPrice { get; set; }
         public DateTime Date { get; set; }
-        public long Quantity { get; set; }
+        public decimal Quantity { get; set; }
         public string Unit { get; set; }
-        public long PricePerUnit { get; set; }
+        public decimal PricePerUnit { get; set; }
         
     }
 }

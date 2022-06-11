@@ -23,7 +23,12 @@ namespace API.Entities
         public void DeleteProduct(int id) {
             var product = Products.FirstOrDefault(prod => prod.Id == id);
             if (product == null) return;
+            
             Products.Remove(product);
+            foreach (var item in Products)
+            {
+                Console.WriteLine(item.Id);
+            }
         }
     }
 }

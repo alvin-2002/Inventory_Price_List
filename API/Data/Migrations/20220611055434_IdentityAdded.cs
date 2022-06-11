@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace API.Data.Migrations
 {
-    public partial class ProductsAdded : Migration
+    public partial class IdentityAdded : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -161,9 +161,9 @@ namespace API.Data.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: true),
-                    TotalPrice = table.Column<long>(type: "INTEGER", nullable: false),
+                    TotalPrice = table.Column<decimal>(type: "TEXT", nullable: false),
                     Date = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Quantity = table.Column<long>(type: "INTEGER", nullable: false),
+                    Quantity = table.Column<decimal>(type: "TEXT", nullable: false),
                     Unit = table.Column<int>(type: "INTEGER", nullable: false),
                     UserId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
@@ -181,7 +181,7 @@ namespace API.Data.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { 1, "9b44a155-0987-49fb-ae97-c3ccaa61b9fc", "Member", "MEMBER" });
+                values: new object[] { 1, "f7bdec1f-8a02-4a6f-827c-e0e15f1ebb3a", "Member", "MEMBER" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

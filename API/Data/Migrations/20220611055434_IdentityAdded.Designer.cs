@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(InventoryContext))]
-    [Migration("20220610124100_ProductsAdded")]
-    partial class ProductsAdded
+    [Migration("20220611055434_IdentityAdded")]
+    partial class IdentityAdded
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -30,11 +30,11 @@ namespace API.Data.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
-                    b.Property<long>("Quantity")
-                        .HasColumnType("INTEGER");
+                    b.Property<decimal>("Quantity")
+                        .HasColumnType("TEXT");
 
-                    b.Property<long>("TotalPrice")
-                        .HasColumnType("INTEGER");
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("Unit")
                         .HasColumnType("INTEGER");
@@ -79,7 +79,7 @@ namespace API.Data.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "9b44a155-0987-49fb-ae97-c3ccaa61b9fc",
+                            ConcurrencyStamp = "f7bdec1f-8a02-4a6f-827c-e0e15f1ebb3a",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         });

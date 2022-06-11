@@ -9,13 +9,13 @@ namespace API.Entities
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public long TotalPrice { get; set; }
+        public decimal TotalPrice { get; set; }
         public DateTime Date { get; set; } = DateTime.Now;
-        public long Quantity { get; set; }
+        public decimal Quantity { get; set; }
         public Unit Unit { get; set; }
-        public long GetPricePerUnit()
+        public decimal GetPricePerUnit()
         {
-            return TotalPrice / Quantity;
+            return (decimal) TotalPrice / Quantity;
         }
 
         public int UserId { get; set; }
