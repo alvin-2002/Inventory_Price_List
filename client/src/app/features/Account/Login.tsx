@@ -11,7 +11,7 @@ type FormValues = {
 
 export default function Login() {
     const history = useHistory();
-    const {register, handleSubmit, formState: {isSubmitting, errors, isValid}} = useForm<FormValues>({
+    const {register, handleSubmit, setError, formState: {isSubmitting, errors, isValid}} = useForm<FormValues>({
         mode: 'all'
     });
 
@@ -21,8 +21,11 @@ export default function Login() {
             localStorage.setItem('user', JSON.stringify(userDto));
             history.push('/');
         } catch (error: any) {
-            console.log(error);
+            handleApiError(error);
         }
+    }
+    function handleApiError(error: any) {
+        console.log('dfsdf', error);
     }
 
     return (

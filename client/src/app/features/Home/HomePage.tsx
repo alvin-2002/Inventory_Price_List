@@ -7,11 +7,13 @@ import { Product } from "../../models/product";
 export default function HomePage() {
     const [products, setProducts] = useState<Product[] | null>(null);
     // const data = await agent.Products.login();
-
+    
     useEffect(() => {
-       agent.Products.list()
-        .then(data => setProducts(data))
-        .catch(error => console.log(error));
+       if (localStorage.getItem('user')){
+            agent.Products.list()
+                .then(data => setProducts(data))
+                .catch(error => console.log(error));
+       }
 
     }, [])
 

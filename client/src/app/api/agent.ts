@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { request } from "http";
+import { toast } from "react-toastify";
 
 
 axios.defaults.baseURL = 'http://localhost:5000/api/';
@@ -8,25 +9,25 @@ axios.defaults.withCredentials = true;
 const responseBody = (response: AxiosResponse) => response.data;
 
 axios.interceptors.request.use((config: any) => {
-    const token = JSON.parse(localStorage.getItem('user')!).token;
-    console.log(token)
+    const token = JSON.parse(localStorage.getItem('user')!);
+    // console.log(token)
     if (!config) {
         config = {};
     }
     if (!config.headers) {
         config.headers = {};
     }
-    if (token) config.headers.Authorization = `Bearer ${token}`;
+    if (token) config.headers.Authorization = `Bearer ${token.token}`;
     // console.log('sdfsd', config.headers.Authorization)
     return config;
 
 })
 
-axios.interceptors.response.use(response => {
-
+axios.interceptors.response.use(async response => {
+    console.log('response')
     return response;
-
 }, (error: AxiosError) => {
+
     const { status } = error.response!;
     const data: any  = error.response!.data;
 
@@ -42,14 +43,18 @@ axios.interceptors.response.use(response => {
                 }
                 throw modelStateError.flat();
             }
+            console.log('data', data.title)
+            throw data.title;
+            break;
+        
+        case 401: 
+            toast.error(data.title);
+            throw data.title;
             break;
     
         default:
             break;
     }
-
-
-
     return Promise.reject(error);
 })
 
