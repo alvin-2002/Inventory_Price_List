@@ -105,7 +105,8 @@ namespace API
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
             }
 
-            app.UseHttpsRedirection();
+            // comment this out to prevent cors error
+            // app.UseHttpsRedirection();
 
             app.UseRouting();
 
