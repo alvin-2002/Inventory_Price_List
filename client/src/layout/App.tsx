@@ -10,12 +10,17 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useEffect } from 'react';
 import { useAppDispatch } from '../app/store/configureStore';
 import { getCurrentUser } from '../app/features/Account/accountSlice';
+import ProductList from '../app/features/Product/ProductList';
+import { getProducts } from '../app/features/Product/productSlice';
 
 function App() {
   const dispatch = useAppDispatch();
+
   useEffect(() => {
     dispatch(getCurrentUser());
   }, [])
+
+
   return (
     <>
       <CssBaseline />
@@ -28,6 +33,7 @@ function App() {
           </Route>
           <Route path='/login' component={Login} />
           <Route path='/register' component={Register} />
+          <Route path='/products' component={ProductList} />
         </Switch>
       </Container>
     </>

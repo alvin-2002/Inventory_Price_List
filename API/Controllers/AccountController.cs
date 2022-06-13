@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.Data;
 using API.DTOs;
 using API.Entities;
 using API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
@@ -15,8 +17,10 @@ namespace API.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly TokenService _tokenService;
-        public AccountController(UserManager<User> userManager, TokenService tokenService)
+        private readonly InventoryContext _context;
+        public AccountController(UserManager<User> userManager, TokenService tokenService, InventoryContext context)
         {
+            _context = context;
             _tokenService = tokenService;
             _userManager = userManager;
         }
@@ -28,11 +32,12 @@ namespace API.Controllers
 
             if(user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Password))
                 return Unauthorized();
-
+            
             return new UserDto
             {
                 Email = user.Email,
-                Token = await _tokenService.GenerateToken(user)
+                Token = await _tokenService.GenerateToken(user),
+                Products = await GetProducts(user.UserName)
             };
         }
 
@@ -63,12 +68,32 @@ namespace API.Controllers
         public async Task<ActionResult<UserDto>> GetCurrentUser()
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
+
             Console.WriteLine(user.Products);
             return new UserDto
             {
                 Email = user.Email,
-                Token = await _tokenService.GenerateToken(user)
+                Token = await _tokenService.GenerateToken(user),
+                Products = await GetProducts(user.UserName)
             };
+        }
+
+        private async Task<List<ProductDto>> GetProducts(String name)
+        {
+            var user = await _context.Users
+                            .Include(a => a.Products)
+                            .FirstOrDefaultAsync(x => x.UserName == name);
+            // Console.WriteLine(user.);                
+            return user.Products.Select(p => new ProductDto 
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Date = p.Date,
+                TotalPrice = p.TotalPrice,
+                PricePerUnit = p.GetPricePerUnit(),
+                Quantity = p.Quantity,
+                Unit = p.Unit.ToString()
+            }).ToList();
         }
     }
 }

@@ -3,6 +3,7 @@ import { FieldValues } from "react-hook-form";
 import { toast } from "react-toastify";
 import agent from "../../api/agent";
 import { User } from "../../models/user";
+import { getProducts, setProducts } from "../Product/productSlice";
 
 interface AccountState {
     user: User | null;
@@ -15,28 +16,32 @@ const initialState: AccountState = {
 
 export const login = createAsyncThunk<User, FieldValues>(
     'account/login',
-    async (data, { rejectWithValue }) => {
+    async (data, thunkAPI) => {
         try {
             const userDto: User = await agent.Account.login(data);
-            localStorage.setItem('user', JSON.stringify(userDto));
-
-            return userDto;
+            const { products, ...user} = userDto;
+            localStorage.setItem('user', JSON.stringify(user));
+            if (products) thunkAPI.dispatch(setProducts(products));
+            return user;
         } catch (error: any) {
-            return rejectWithValue({ error: error });
+            return thunkAPI.rejectWithValue({ error: error });
         }
     }
 )
 
 export const getCurrentUser = createAsyncThunk<User> (
     'account/getCurrentUser',
-    async (_, thunkApi) => {
-        thunkApi.dispatch(setUser(JSON.parse(localStorage.getItem('user')!)));
+    async (_, thunkAPI) => {
+        // thunkApi.dispatch(getProducts());
+        thunkAPI.dispatch(setUser(JSON.parse(localStorage.getItem('user')!)));
         try {
             const userDto = await agent.Account.currentUser();
-            localStorage.setItem('user', JSON.stringify(userDto));
-            return userDto;
+            const { products, ...user} = userDto;
+            localStorage.setItem('user', JSON.stringify(user));
+            if (products) thunkAPI.dispatch(setProducts(products));
+            return user;
         } catch (error: any) {
-            return thunkApi.rejectWithValue({error: error.data});
+            return thunkAPI.rejectWithValue({error: error.data});
         }
     },
     {
@@ -46,8 +51,6 @@ export const getCurrentUser = createAsyncThunk<User> (
         }
     }
 )
-
-
 
 
 export const accountSlice = createSlice({

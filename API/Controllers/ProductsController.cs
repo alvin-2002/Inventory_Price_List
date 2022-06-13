@@ -41,7 +41,7 @@ namespace API.Controllers
             var user = await _context.Users
                             .Include(a => a.Products)
                             .FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
-            // Console.WriteLine(user.);                
+                     
             return user.Products.Select(p => new ProductDto 
             {
                 Id = p.Id,

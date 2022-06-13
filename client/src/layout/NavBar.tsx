@@ -7,10 +7,11 @@ import { List, ListItem } from '@mui/material';
 import { Link, NavLink } from "react-router-dom";
 import { useEffect, useState } from 'react';
 import { useAppSelector } from '../app/store/configureStore';
+import { textTransform } from '@mui/system';
 
 
 const navStyles = {
-    color: 'inherit', 
+    color: '#FFFF', 
     textDecoration: 'none',
     typography: 'h6',
     '&:hover': {
@@ -21,25 +22,43 @@ const navStyles = {
     }
 }
 
+const upperNavStyle = {
+  ...navStyles,  
+  textTransform: 'uppercase',
+
+}
+
 export default function ButtonAppBar() {
   const { user } = useAppSelector(state => state.account);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
-        <Toolbar sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-        {user && 
+        <Toolbar sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}> 
           <Typography 
-            sx={navStyles} 
+            sx={upperNavStyle} 
             component={NavLink} 
             to='/' 
             exact
           >
-            Products
+            Price Tracker
           </Typography>
-        }
-          {user ? (
+        
+        {user ? (
+          <div style={{display: 'flex', alignItems: 'center', columnGap: '7px'}}>
+            <Typography 
+              sx={upperNavStyle}
+              component={NavLink} 
+              to='/products' 
+              
+            >
+              Products
+            </Typography>
+    
             <SignedInMenu />
+          </div>
+             
+          
           ) : (
             <List sx={{display: 'flex', marginLeft: 'auto', justifyContent: 'flex-end'}}>
                 <ListItem
