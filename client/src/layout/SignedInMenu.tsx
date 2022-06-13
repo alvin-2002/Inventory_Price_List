@@ -3,9 +3,14 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { useHistory } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../app/store/configureStore';
+import { logoutUser } from '../app/features/Account/accountSlice';
+
 
 export default function SignedInMenu() {
-    const history = useHistory();
+  const history = useHistory();
+  const {user} = useAppSelector(state => state.account);
+  const dispatch = useAppDispatch();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: any) => {
@@ -17,7 +22,7 @@ export default function SignedInMenu() {
   };
 
   const logout = () => {
-    localStorage.removeItem('user');
+    dispatch(logoutUser());
     history.push('/login');
   }
 
@@ -28,7 +33,7 @@ export default function SignedInMenu() {
         onClick={handleClick}
         sx={{typography: 'h6'}}
       >
-        Dashboard
+        {user?.email}
       </Button>
       <Menu
         id="basic-menu"

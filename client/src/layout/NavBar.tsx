@@ -6,6 +6,7 @@ import SignedInMenu from './SignedInMenu';
 import { List, ListItem } from '@mui/material';
 import { Link, NavLink } from "react-router-dom";
 import { useEffect, useState } from 'react';
+import { useAppSelector } from '../app/store/configureStore';
 
 
 const navStyles = {
@@ -21,11 +22,8 @@ const navStyles = {
 }
 
 export default function ButtonAppBar() {
-    const [user, setUser] = useState<any | null>(null);
-    useEffect(() => {
-        setUser(localStorage.getItem('user'))
-    }, [localStorage.getItem('user')]);
-    console.log(user)
+  const { user } = useAppSelector(state => state.account);
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">

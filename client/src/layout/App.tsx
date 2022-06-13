@@ -7,8 +7,15 @@ import NavBar from './NavBar';
 import { Container, CssBaseline } from '@mui/material';
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { useEffect } from 'react';
+import { useAppDispatch } from '../app/store/configureStore';
+import { getCurrentUser } from '../app/features/Account/accountSlice';
 
 function App() {
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(getCurrentUser());
+  }, [])
   return (
     <>
       <CssBaseline />

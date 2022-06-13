@@ -2,6 +2,7 @@ import { Container, Typography, Box, TextField, Button, Grid } from "@mui/materi
 import { useForm, FieldValues } from "react-hook-form";
 import { Link, useHistory } from "react-router-dom";
 import agent from "../../api/agent";
+import { useAppSelector } from "../../store/configureStore";
 
 type FormValues = {
     username: string;
@@ -11,6 +12,7 @@ type FormValues = {
 
 export default function Register() {
     const history = useHistory();
+    const {user} = useAppSelector(state => state.account);
     const {register, handleSubmit, setError, formState: {isSubmitting, errors, isValid}} = useForm<FormValues>({
         mode: 'all'
     });
@@ -38,7 +40,10 @@ export default function Register() {
             .catch(error => handleApiErrors(error));
     }
 
-
+    if (user) return (
+        <h1>User already Logged In.</h1>
+    )
+    
     return (
         <Container component="main" sx={{
             display: 'flex',

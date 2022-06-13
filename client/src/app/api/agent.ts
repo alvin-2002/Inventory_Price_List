@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { request } from "http";
 import { toast } from "react-toastify";
+import { store } from "../store/configureStore";
 
 
 axios.defaults.baseURL = 'http://localhost:5000/api/';
@@ -9,15 +10,16 @@ axios.defaults.withCredentials = true;
 const responseBody = (response: AxiosResponse) => response.data;
 
 axios.interceptors.request.use((config: any) => {
-    const token = JSON.parse(localStorage.getItem('user')!);
-    // console.log(token)
+    // const token = JSON.parse(localStorage.getItem('user')!);
+    const token = store.getState().account.user?.token;
+
     if (!config) {
         config = {};
     }
     if (!config.headers) {
         config.headers = {};
     }
-    if (token) config.headers.Authorization = `Bearer ${token.token}`;
+    if (token) config.headers.Authorization = `Bearer ${token}`;
     // console.log('sdfsd', config.headers.Authorization)
     return config;
 
@@ -68,6 +70,7 @@ const requests = {
 const Account = {
     login: (values: any) => requests.post('account/login', values),
     register: (values: any) => requests.post('account/register', values),
+    currentUser: () => requests.get('account/currentUser')
 }
 
 const Products = {

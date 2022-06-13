@@ -2,6 +2,8 @@ import { Avatar, Box, Button, Checkbox, Container, CssBaseline, FormControlLabel
 import { FieldValues, useForm } from "react-hook-form";
 import { Link, useHistory } from "react-router-dom";
 import agent from "../../api/agent";
+import { useAppDispatch, useAppSelector } from "../../store/configureStore";
+import { login } from "./accountSlice";
 
 
 type FormValues = {
@@ -11,22 +13,28 @@ type FormValues = {
 
 export default function Login() {
     const history = useHistory();
+    const dispatch = useAppDispatch();
+    const {user} = useAppSelector(state => state.account);
     const {register, handleSubmit, setError, formState: {isSubmitting, errors, isValid}} = useForm<FormValues>({
         mode: 'all'
     });
 
     async function submitForm(data: FieldValues) {
         try {
-            const userDto = await agent.Account.login(data);
-            localStorage.setItem('user', JSON.stringify(userDto));
+            await dispatch(login(data));
             history.push('/');
         } catch (error: any) {
             handleApiError(error);
         }
     }
+
     function handleApiError(error: any) {
-        console.log('dfsdf', error);
+        console.log('error', error);
     }
+
+    if (user) return (
+        <h1>User already Logged In.</h1>
+    )
 
     return (
         <Container component="main" sx={{
