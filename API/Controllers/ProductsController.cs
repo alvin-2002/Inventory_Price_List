@@ -73,20 +73,40 @@ namespace API.Controllers
         public async Task<ActionResult> RemoveProduct(int id)
         {
             var user = await _context.Users
-                            .Include(a => a.Products)
                             .FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
-
-            var product = user.Products.FirstOrDefault(x => x.Id == id);
+            var product = await _context.Products.Where(p => p.UserId == user.Id).FirstOrDefaultAsync(p => p.Id == id);
 
             if (product == null) return NotFound();
 
-            user.Products.Remove(product);
+            _context.Products.Remove(product);
 
             var result = await _context.SaveChangesAsync() > 0;
             if (result) return StatusCode(201);
             return BadRequest(new ProblemDetails{Title = "Problem removing item from a user"});
         }
+        [HttpPut]
+        public async Task<ActionResult<ProductDto>> UpdateProduct(UpdateProductDto productDto)
+        {
+            var user = await _context.Users
+                            .FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
 
+            var product = await _context.Products.Where(p => p.UserId == user.Id).FirstOrDefaultAsync(p => p.Id == productDto.Id);
+
+            if (product == null) return NotFound();
+
+            product.Name = productDto.Name;
+            product.CategoryId = productDto.CategoryId;
+            product.Quantity = productDto.Quantity;
+            product.Unit = productDto.Unit;
+            product.Date = productDto.Date;
+            product.TotalPrice = productDto.TotalPrice;
+
+            var result = await _context.SaveChangesAsync() > 0;
+
+            if (result) return Ok(productDto);
+
+            return BadRequest(new ProblemDetails{ Title = "Problem updating product"});
+        }
         
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using API.Data;
+using API.DTOs;
 using API.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -52,7 +53,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-         public async Task<ActionResult<List<Category>>> GetCategories()
+        public async Task<ActionResult<List<Category>>> GetCategories()
         {
             var user = await _context.Users
                             .FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
@@ -60,5 +61,28 @@ namespace API.Controllers
                      
             return Ok(categories);
         }
+
+        [HttpPut]
+        public async Task<ActionResult<Category>> UpdateCategory(UpdateCategoryDto categoryDto)
+        {
+            var user = await _context.Users
+                            .Include(u => u.Categories)
+                            .FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
+
+            var category = user.Categories.FirstOrDefault(c => c.Id == categoryDto.Id);
+            
+            if (category == null) return NotFound();
+
+            category.CategoryName = categoryDto.CategoryName;
+
+            var result = await _context.SaveChangesAsync() > 0;
+
+            if (result) return Ok(category);
+
+            return BadRequest(new ProblemDetails{ Title = "Problem updating category"});
+        }
+
+     
+
     }
 }
