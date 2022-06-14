@@ -14,6 +14,7 @@ namespace API.DTOs
         public DateTime Date { get; set; }
         public decimal Quantity { get; set; }
         public string Unit { get; set; }
+        public string CategoryName { get; set; }
         public decimal PricePerUnit { get; set; }
         
     }

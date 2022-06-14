@@ -15,7 +15,8 @@ namespace API.Data
         {
 
         }
-        // public DbSet<Product> Products { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<Category> Categories { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -24,6 +25,11 @@ namespace API.Data
             //     .WithMany(u => u.Products)
             //     .HasForeignKey(n => n.UserId)
             //     .OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<User>()
+                .HasMany(c => c.Categories)
+                .WithOne()
+                .HasForeignKey(u => u.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<Role>()
                 .HasData(

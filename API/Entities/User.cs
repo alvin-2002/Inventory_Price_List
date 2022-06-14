@@ -9,26 +9,7 @@ namespace API.Entities
 {
     public class User : IdentityUser<int>
     {
-        // public Product Product { get; set; }
-        public List<Product> Products { get; set; } = new List<Product>();
-
-        public void AddProduct(CreateProductDto productDto){
-            Products.Add(new Product {
-                Name = productDto.Name,
-                TotalPrice = productDto.TotalPrice,
-                Quantity = productDto.Quantity,
-            });
-        }
-
-        public void DeleteProduct(int id) {
-            var product = Products.FirstOrDefault(prod => prod.Id == id);
-            if (product == null) return;
-            
-            Products.Remove(product);
-            foreach (var item in Products)
-            {
-                Console.WriteLine(item.Id);
-            }
-        }
+        public ICollection<Product> Products { get; set; }
+        public ICollection<Category> Categories { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,6 +13,7 @@ namespace API.Entities
         public decimal TotalPrice { get; set; }
         public DateTime Date { get; set; } = DateTime.Now;
         public decimal Quantity { get; set; }
+        
         public Unit Unit { get; set; }
         public decimal GetPricePerUnit()
         {
@@ -20,5 +22,7 @@ namespace API.Entities
 
         public int UserId { get; set; }
         public User User { get; set; }
+        public int? CategoryId { get; set; }
+        public Category Category { get; set; }
     }
 }

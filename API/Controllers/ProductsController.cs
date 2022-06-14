@@ -24,10 +24,19 @@ namespace API.Controllers
         public async Task<ActionResult<ProductDto>> CreateProduct(CreateProductDto productDto)
         {
             var user = await _context.Users
-                            .Include(a => a.Products)
                             .FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
-            
-            user.AddProduct(productDto);
+  
+            var category = await _context.Categories.Where(u => u.UserId == user.Id).FirstOrDefaultAsync(c => c.Id == productDto.CategoryId);
+
+            if (category == null) return NotFound();
+
+            _context.Products.Add(new Product {
+                Name = productDto.Name,
+                TotalPrice = productDto.TotalPrice,
+                Quantity = productDto.Quantity,
+                CategoryId = category.Id,
+                UserId = user.Id
+            });
 
             var result = await _context.SaveChangesAsync() > 0;
             if (result) return Ok(productDto);
@@ -38,11 +47,16 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<List<ProductDto>>> GetProducts()
         {
+            // var user = await _context.Users
+            //                 .Include(a => a.Products)
+            //                 .ThenInclude(a => a.Category)
+            //                 .FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
             var user = await _context.Users
-                            .Include(a => a.Products)
                             .FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
+
+            var products = await _context.Products.Include(p => p.Category).Where(p => p.UserId == user.Id).ToListAsync();
                      
-            return user.Products.Select(p => new ProductDto 
+            return products.Select(p => new ProductDto 
             {
                 Id = p.Id,
                 Name = p.Name,
@@ -50,6 +64,7 @@ namespace API.Controllers
                 TotalPrice = p.TotalPrice,
                 PricePerUnit = p.GetPricePerUnit(),
                 Quantity = p.Quantity,
+                CategoryName = p.Category == null ? null : p.Category.CategoryName,
                 Unit = p.Unit.ToString()
             }).ToList();
         }
@@ -60,12 +75,18 @@ namespace API.Controllers
             var user = await _context.Users
                             .Include(a => a.Products)
                             .FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
-            user.DeleteProduct(id);
+
+            var product = user.Products.FirstOrDefault(x => x.Id == id);
+
+            if (product == null) return NotFound();
+
+            user.Products.Remove(product);
 
             var result = await _context.SaveChangesAsync() > 0;
             if (result) return StatusCode(201);
             return BadRequest(new ProblemDetails{Title = "Problem removing item from a user"});
         }
+
         
     }
 }

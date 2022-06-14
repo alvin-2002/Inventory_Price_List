@@ -82,6 +82,7 @@ namespace API.Controllers
         {
             var user = await _context.Users
                             .Include(a => a.Products)
+                            .ThenInclude(a => a.Category)
                             .FirstOrDefaultAsync(x => x.UserName == name);
             // Console.WriteLine(user.);                
             return user.Products.Select(p => new ProductDto 
@@ -92,6 +93,7 @@ namespace API.Controllers
                 TotalPrice = p.TotalPrice,
                 PricePerUnit = p.GetPricePerUnit(),
                 Quantity = p.Quantity,
+                CategoryName = p.Category == null ? null : p.Category.CategoryName,
                 Unit = p.Unit.ToString()
             }).ToList();
         }
