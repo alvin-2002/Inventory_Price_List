@@ -1,6 +1,7 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/toolkit";
 import { Product } from "../../models/product";
 import agent from "../../api/agent";
+import { RootState } from "../../store/configureStore";
 
 interface ProductState {
     products: Product[] | null;
@@ -9,6 +10,8 @@ interface ProductState {
 const initialState: ProductState = {
     products: null
 }
+
+const productsAdapter = createEntityAdapter<Product>();
 
 export const getProducts = createAsyncThunk<Product[]>(
     'product/getProducts',
@@ -29,10 +32,13 @@ export const getProducts = createAsyncThunk<Product[]>(
 
 export const productSlice = createSlice({
     name: 'product',
-    initialState,
+    initialState: productsAdapter.getInitialState(),
     reducers: {
         setProducts: (state, action) => {
-            state.products = action.payload;
+            productsAdapter.addMany(state, action.payload);
+        },
+        addProduct: (state, action) => {
+            productsAdapter.upsertOne(state, action.payload);
         }
     },
     extraReducers: (builder) => {
@@ -41,9 +47,11 @@ export const productSlice = createSlice({
             throw action.payload;
         })
         builder.addCase(getProducts.fulfilled, (state, action) => {
-            state.products = action.payload;
+            productsAdapter.addMany(state, action.payload);
         })
     }
 })
 
-export const { setProducts } = productSlice.actions; 
+export const productSelectors = productsAdapter.getSelectors((state: RootState) => state.product);
+
+export const { setProducts, addProduct } = productSlice.actions; 

@@ -73,13 +73,21 @@ const Account = {
     currentUser: () => requests.get('account/currentUser')
 }
 
+const Categories = {
+    list: () => requests.get('category'),
+}
+
 const Products = {
-    list: () => requests.get('products')
+    list: () => requests.get('products'),
+    create: (data: any) => requests.post('products', data),
+    update: (data: any) => requests.put('products', data),
+    delete: (id: number) => requests.delete(`products/${id}`)
 }
 
 const agent = {
     Account,
-    Products
+    Products,
+    Categories
 }
 
 export default agent;

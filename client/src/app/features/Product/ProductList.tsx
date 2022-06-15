@@ -1,16 +1,24 @@
 import { Box, Typography, Button, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
 import { useAppDispatch, useAppSelector } from "../../store/configureStore";
+import { useState } from "react";
+import ProductForm from "./ProductForm";
+import { productSelectors } from "./productSlice";
+import {format, parse} from 'date-fns';
 
 export default function ProductList() {
-
-    const { products } = useAppSelector(state => state.product);
-
+    const [editMode, setEditMode] = useState(false);
+    // const { products } = useAppSelector(state => state.product);
+    const products = useAppSelector(productSelectors.selectAll);
+    function cancelEdit() {
+        setEditMode(false);
+    }
+    if (editMode) return <ProductForm cancelEdit={cancelEdit} />
     return (
         <>
         <Box display='flex' justifyContent='space-between'>
             <Typography sx={{ p: 2 }} variant='h4'>Inventory</Typography>
-            <Button sx={{ m: 2 }} size='large' variant='contained'>Create</Button>
+            <Button onClick={() => setEditMode(true)} sx={{ m: 2 }} size='large' variant='contained'>Create</Button>
         </Box>
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -23,6 +31,7 @@ export default function ProductList() {
                         <TableCell align="center">Total Price</TableCell>
                         <TableCell align="center">Price</TableCell>
                         <TableCell align="center">Date</TableCell>
+                        <TableCell align="center">Category Name</TableCell>
                         <TableCell align="right"></TableCell>
                     </TableRow>
                 </TableHead>
@@ -43,9 +52,10 @@ export default function ProductList() {
                             </TableCell> */}
                             {/* <TableCell align="left">{product.name}</TableCell> */}
                             <TableCell align="center">{product.quantity}</TableCell>
-                            <TableCell align="center">{product.totalPrice}</TableCell>
-                            <TableCell align="center">${product.pricePerUnit.toFixed(2)}  per {product.unit}</TableCell>
-                            <TableCell align="center">{product.date.toString().split('T')[0]}</TableCell>
+                            <TableCell align="center">${product.totalPrice}</TableCell>
+                            <TableCell align="center">${product.pricePerUnit.toFixed(2)}/{product.unit}</TableCell>
+                            <TableCell align="center">{format(new Date(product.date), 'dd/MM/yyyy')}</TableCell>
+                            <TableCell align="center">{product.categoryName}</TableCell>
                             <TableCell align="right">
                                 <Button startIcon={<Edit />} />
                                 <Button startIcon={<Delete />}  />

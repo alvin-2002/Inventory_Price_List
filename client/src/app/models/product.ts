@@ -5,5 +5,6 @@ export interface Product {
     date: Date;
     quantity: number;
     unit: string;
+    categoryName?: string;
     pricePerUnit: number;
 }

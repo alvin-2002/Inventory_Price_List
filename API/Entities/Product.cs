@@ -11,7 +11,7 @@ namespace API.Entities
         public int Id { get; set; }
         public string Name { get; set; }
         public decimal TotalPrice { get; set; }
-        public DateTime Date { get; set; } = DateTime.Now;
+        public DateTime Date { get; set; }
         public decimal Quantity { get; set; }
         
         public Unit Unit { get; set; }
