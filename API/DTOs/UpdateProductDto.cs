@@ -14,12 +14,12 @@ namespace API.DTOs
         public string Name { get; set; }
         [Required]
         [Range(0, Double.PositiveInfinity)] // no max value
-        public long TotalPrice { get; set; }
+        public decimal TotalPrice { get; set; }
         [Required]
-        public DateTime Date { get; set; } = DateTime.Now;
+        public DateTime Date { get; set; }
         [Required]
         [Range(1, Double.PositiveInfinity)]
-        public long Quantity { get; set; }
+        public decimal Quantity { get; set; }
         public int? CategoryId { get; set; }
         public Unit Unit { get; set; }
     }

@@ -79,6 +79,7 @@ const Categories = {
 
 const Products = {
     list: () => requests.get('products'),
+    detail: (id: number) => requests.get(`products/${id}`),
     create: (data: any) => requests.post('products', data),
     update: (data: any) => requests.put('products', data),
     delete: (id: number) => requests.delete(`products/${id}`)

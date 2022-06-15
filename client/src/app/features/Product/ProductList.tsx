@@ -3,17 +3,41 @@ import { Edit, Delete } from "@mui/icons-material";
 import { useAppDispatch, useAppSelector } from "../../store/configureStore";
 import { useState } from "react";
 import ProductForm from "./ProductForm";
-import { productSelectors } from "./productSlice";
-import {format, parse} from 'date-fns';
+import { productSelectors, removeProduct } from "./productSlice";
+import {format} from 'date-fns';
+import agent from "../../api/agent";
+import { UpdateProduct } from "../../models/product";
 
 export default function ProductList() {
     const [editMode, setEditMode] = useState(false);
-    // const { products } = useAppSelector(state => state.product);
+    const [selectedProduct, setSelectedProduct] = useState<UpdateProduct | undefined>(undefined);
+
+    const dispatch = useAppDispatch();
     const products = useAppSelector(productSelectors.selectAll);
+    
     function cancelEdit() {
+        if (selectedProduct) setSelectedProduct(undefined);
         setEditMode(false);
     }
-    if (editMode) return <ProductForm cancelEdit={cancelEdit} />
+
+    function handleSelectedProduct(id: number) {
+        agent.Products.detail(id)
+            .then((product: UpdateProduct) => {
+                setSelectedProduct(product);
+                setEditMode(true);
+            })
+            .catch(error => console.log(error))
+    }
+
+    function handleDeleteProduct(id: number) {
+        agent.Products.delete(id)
+            .then(() => dispatch(removeProduct(id)))
+            .catch(error => console.log(error))
+    }
+
+    
+    if (editMode) return <ProductForm product={selectedProduct} cancelEdit={cancelEdit} />
+
     return (
         <>
         <Box display='flex' justifyContent='space-between'>
@@ -57,8 +81,8 @@ export default function ProductList() {
                             <TableCell align="center">{format(new Date(product.date), 'dd/MM/yyyy')}</TableCell>
                             <TableCell align="center">{product.categoryName}</TableCell>
                             <TableCell align="right">
-                                <Button startIcon={<Edit />} />
-                                <Button startIcon={<Delete />}  />
+                                <Button startIcon={<Edit />} onClick={() => handleSelectedProduct(product.id)}/>
+                                <Button color='error' startIcon={<Delete />} onClick={() => handleDeleteProduct(product.id)}  />
                             </TableCell>
                         </TableRow>
                     ))}

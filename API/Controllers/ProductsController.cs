@@ -32,7 +32,9 @@ namespace API.Controllers
   
             var category = await _context.Categories.Where(u => u.UserId == user.Id).FirstOrDefaultAsync(c => c.Id == productDto.CategoryId);
 
-            if (category == null) return NotFound();
+            if (category == null && productDto.CategoryId != null) return NotFound();
+
+            var categoryId = (category == null) ? null : (int?)category.Id;
 
             var product = new Product {
                 Name = productDto.Name,
@@ -40,16 +42,14 @@ namespace API.Controllers
                 Date = productDto.Date,
                 Quantity = productDto.Quantity,
                 Unit = productDto.Unit,
-                CategoryId = category.Id,
+                CategoryId = categoryId,
                 UserId = user.Id
             };
             _context.Products.Add(product);
-            // var product = _mapper.Map<Product>(productDto);
-            // _context.Products.Add(product);
+
             var result = await _context.SaveChangesAsync() > 0;
             if (result) {
-                // product.Id = 
-                // var prod = _mapper.Map<ProductDto>(product);
+
                 var prod = new ProductDto 
                 {
                     Id = product.Id,
@@ -61,7 +61,7 @@ namespace API.Controllers
                     CategoryName = product.Category == null ? null : product.Category.CategoryName,
                     Unit = product.Unit.ToString()
                 };
-                // return CreatedAtRoute("GetProduct", new {Id = product.Id}, prod);
+                
                 return Ok(prod);
             }
 
@@ -71,10 +71,6 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<List<ProductDto>>> GetProducts()
         {
-            // var user = await _context.Users
-            //                 .Include(a => a.Products)
-            //                 .ThenInclude(a => a.Category)
-            //                 .FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
             var user = await _context.Users
                             .FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
 
@@ -92,8 +88,8 @@ namespace API.Controllers
                 Unit = p.Unit.ToString()
             }).ToList();
         }
-        [HttpGet("{id}", Name="GetProduct")]
-        public async Task<ActionResult<ProductDto>> GetProduct(int id)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<UpdateProductDto>> GetProduct(int id)
         {
             var user = await _context.Users
                             .FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
@@ -101,16 +97,15 @@ namespace API.Controllers
 
             if (product == null) return NotFound();
 
-            return new ProductDto 
+            return new UpdateProductDto 
             {
                 Id = product.Id,
                 Name = product.Name,
                 Date = product.Date,
                 TotalPrice = product.TotalPrice,
-                PricePerUnit = product.GetPricePerUnit(),
                 Quantity = product.Quantity,
-                CategoryName = product.Category == null ? null : product.Category.CategoryName,
-                Unit = product.Unit.ToString()
+                CategoryId = product.CategoryId,
+                Unit = product.Unit
             };
         }
 
@@ -135,9 +130,15 @@ namespace API.Controllers
             var user = await _context.Users
                             .FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
 
-            var product = await _context.Products.Where(p => p.UserId == user.Id).FirstOrDefaultAsync(p => p.Id == productDto.Id);
+            var product = await _context.Products.Include(u => u.Category).Where(p => p.UserId == user.Id).FirstOrDefaultAsync(p => p.Id == productDto.Id);
 
             if (product == null) return NotFound();
+
+            var category = await _context.Categories.Where(u => u.UserId == user.Id).FirstOrDefaultAsync(c => c.Id == productDto.CategoryId);
+
+            if (category == null && productDto.CategoryId != null) return NotFound();
+
+            var categoryId = (category == null) ? null : (int?)category.Id;
 
             product.Name = productDto.Name;
             product.CategoryId = productDto.CategoryId;
@@ -148,7 +149,22 @@ namespace API.Controllers
 
             var result = await _context.SaveChangesAsync() > 0;
 
-            if (result) return Ok(productDto);
+            if (result) {
+                // after saving, we get updated product
+                var prod = new ProductDto 
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    Date = product.Date,
+                    TotalPrice = product.TotalPrice,
+                    PricePerUnit = product.GetPricePerUnit(),
+                    Quantity = product.Quantity,
+                    CategoryName = product.Category == null ? null : product.Category.CategoryName,
+                    Unit = product.Unit.ToString()
+                };
+
+                return Ok(prod);
+            };
 
             return BadRequest(new ProblemDetails{ Title = "Problem updating product"});
         }

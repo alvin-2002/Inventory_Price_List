@@ -8,3 +8,13 @@ export interface Product {
     categoryName?: string;
     pricePerUnit: number;
 }
+
+export interface UpdateProduct {
+    id: number;
+    name: string;
+    totalPrice: number;
+    date: Date;
+    quantity: number;
+    unit: number;
+    categoryName: number | null;
+}

@@ -7,9 +7,9 @@ interface ProductState {
     products: Product[] | null;
 }
 
-const initialState: ProductState = {
-    products: null
-}
+// const initialState: ProductState = {
+//     products: null
+// }
 
 const productsAdapter = createEntityAdapter<Product>();
 
@@ -35,10 +35,13 @@ export const productSlice = createSlice({
     initialState: productsAdapter.getInitialState(),
     reducers: {
         setProducts: (state, action) => {
-            productsAdapter.addMany(state, action.payload);
+            productsAdapter.setAll(state, action.payload);
         },
         addProduct: (state, action) => {
             productsAdapter.upsertOne(state, action.payload);
+        },
+        removeProduct: (state, action) => {
+            productsAdapter.removeOne(state, action.payload);
         }
     },
     extraReducers: (builder) => {
@@ -54,4 +57,4 @@ export const productSlice = createSlice({
 
 export const productSelectors = productsAdapter.getSelectors((state: RootState) => state.product);
 
-export const { setProducts, addProduct } = productSlice.actions; 
+export const { setProducts, addProduct, removeProduct } = productSlice.actions; 

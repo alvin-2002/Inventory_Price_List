@@ -1,6 +1,6 @@
 import { Typography, Grid, Paper, Box, Button } from "@mui/material";
 import { useEffect, useState } from "react";
-import { FieldValue, FieldValues, useForm } from "react-hook-form";
+import {  FieldValues, useForm } from "react-hook-form";
 import AppTextInput from "../../../app/components/AppTextInput";
 import agent from "../../api/agent";
 import AppSelectList from "../../components/AppSelectList";
@@ -9,11 +9,12 @@ import { validationSchema } from "./productValidation";
 import {yupResolver} from '@hookform/resolvers/yup';
 import { useAppDispatch } from "../../store/configureStore";
 import { addProduct } from "./productSlice";
-import { Product } from "../../models/product";
+import { Product, UpdateProduct } from "../../models/product";
 import AppDatePicker from "../../components/AppDatePicker";
+import { units } from "../../models/unit";
 
 interface Props {
-    product?: Product;
+    product?: UpdateProduct;
     cancelEdit: () => void;
 }
 
@@ -23,7 +24,6 @@ export default function ProductForm({product, cancelEdit}: Props) {
     });
     const [cat, setCat] = useState<Category[] | null>(null);
     const dispatch = useAppDispatch();
-    
 
     useEffect(() => {
         agent.Categories.list().then(data => {
@@ -31,11 +31,19 @@ export default function ProductForm({product, cancelEdit}: Props) {
         });
     }, [])
 
+    useEffect(() => {
+        if (product && !isDirty) reset(product);
+    }, [product, isDirty, reset])
+
     async function handleSubmitData(data: FieldValues) {
-        console.log('dfsdfs')
         try {
+            let response: Product;
             console.log(data)
-            let response: Product = await agent.Products.create(data);
+            if (product) {
+                response = await agent.Products.update(data);
+            } else {
+                response = await agent.Products.create(data);
+            }
             dispatch(addProduct(response));
             cancelEdit();
         } catch (error) {
@@ -54,7 +62,6 @@ export default function ProductForm({product, cancelEdit}: Props) {
                     <AppTextInput control={control} name='name' label='Product name' />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    {/* <AppTextInput control={control} name='date' label='Date' /> */}
                     <AppDatePicker control={control} name='date' label='Date' />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -67,14 +74,15 @@ export default function ProductForm({product, cancelEdit}: Props) {
                     <AppTextInput control={control} name='quantity' label='quantity' />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <AppTextInput control={control} name='unit' label='Unit' />
+                    <AppSelectList control={control} units={units} name='unit' label='Unit' />
                 </Grid>
                 {/* <Grid item xs={12}>
                     <AppTextInput control={control} name='pictureUrl' label='Image' />
                 </Grid> */}
             </Grid>
             <Box display='flex' justifyContent='space-between' sx={{mt: 3}}>
-                <Button variant='contained' color='inherit'>Cancel</Button>
+                <Button variant='contained' color='inherit' onClick={cancelEdit}>Cancel</Button>
+                {/* type = submit trigger onSubmit={} on click */}
                 <Button type='submit' variant='contained' color='success'>Submit</Button>
             </Box>
             </form>
