@@ -3,6 +3,7 @@ import { FieldValues, useForm } from "react-hook-form";
 import { Link, useHistory } from "react-router-dom";
 import agent from "../../api/agent";
 import { useAppDispatch, useAppSelector } from "../../store/configureStore";
+import { getCategories } from "../Category/categorySlice";
 import { login } from "./accountSlice";
 
 
@@ -22,6 +23,7 @@ export default function Login() {
     async function submitForm(data: FieldValues) {
         try {
             await dispatch(login(data));
+            await dispatch(getCategories());
             history.push('/');
         } catch (error: any) {
             handleApiError(error);

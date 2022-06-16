@@ -13,8 +13,8 @@ interface ProductState {
 
 const productsAdapter = createEntityAdapter<Product>();
 
-export const getProducts = createAsyncThunk<Product[]>(
-    'product/getProducts',
+export const getProductsAsync = createAsyncThunk<Product[]>(
+    'product/getProductsAsync',
     async (_, thunkAPI) => {
         try {
             const products = await agent.Products.list();
@@ -45,12 +45,12 @@ export const productSlice = createSlice({
         }
     },
     extraReducers: (builder) => {
-        builder.addCase(getProducts.rejected, (state, action) => {
+        builder.addCase(getProductsAsync.rejected, (state, action) => {
             console.log('prod fail', action.payload)
             throw action.payload;
         })
-        builder.addCase(getProducts.fulfilled, (state, action) => {
-            productsAdapter.addMany(state, action.payload);
+        builder.addCase(getProductsAsync.fulfilled, (state, action) => {
+            productsAdapter.setAll(state, action.payload);
         })
     }
 })

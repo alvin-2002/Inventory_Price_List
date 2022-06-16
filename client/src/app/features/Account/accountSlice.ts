@@ -3,7 +3,7 @@ import { FieldValues } from "react-hook-form";
 import { toast } from "react-toastify";
 import agent from "../../api/agent";
 import { User } from "../../models/user";
-import { getProducts, setProducts } from "../Product/productSlice";
+import { setProducts } from "../Product/productSlice";
 
 interface AccountState {
     user: User | null;

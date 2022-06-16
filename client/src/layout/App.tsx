@@ -11,13 +11,15 @@ import { useEffect } from 'react';
 import { useAppDispatch } from '../app/store/configureStore';
 import { getCurrentUser } from '../app/features/Account/accountSlice';
 import ProductList from '../app/features/Product/ProductList';
-import { getProducts } from '../app/features/Product/productSlice';
+import { getCategories } from '../app/features/Category/categorySlice';
+import CategoryList from '../app/features/Category/CategoryList';
 
 function App() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(getCurrentUser());
+    dispatch(getCategories());
   }, [])
 
 
@@ -34,6 +36,7 @@ function App() {
           <Route path='/login' component={Login} />
           <Route path='/register' component={Register} />
           <Route path='/products' component={ProductList} />
+          <Route path='/categories' component={CategoryList} />
         </Switch>
       </Container>
     </>

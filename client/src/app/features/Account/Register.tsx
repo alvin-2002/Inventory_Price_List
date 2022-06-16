@@ -32,12 +32,12 @@ export default function Register() {
     }
 
     async function submitForm(data: FieldValues) {
-        agent.Account.register(data)
-            .then(() => {
-                console.log('success');
-                history.push('/login');
-            })
-            .catch(error => handleApiErrors(error));
+        await agent.Account.register(data)
+                .then(() => {
+                    console.log('success');
+                    history.push('/login');
+                })
+                .catch(error => handleApiErrors(error));
     }
 
     if (user) return (

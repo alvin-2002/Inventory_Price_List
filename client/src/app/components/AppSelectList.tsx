@@ -4,6 +4,7 @@ import { Category } from "../models/category";
 import { Unit } from "../models/unit";
 
 interface Props extends UseControllerProps {
+    style: any;
     label: string;
     items?: Category[] | null;
     units?: Unit[];
@@ -14,7 +15,7 @@ export default function AppSelectList(props: Props) {
 
     return (
         // cast presence of error object into boolean using !!
-        <FormControl fullWidth error={!!fieldState.error}>
+        <FormControl sx={props.style} error={!!fieldState.error}>
             <InputLabel id="demo-simple-select-label">{props.label}</InputLabel>
             <Select
                 value={ 

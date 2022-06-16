@@ -62,7 +62,7 @@ axios.interceptors.response.use(async response => {
 
 const requests = {
     get: (url: string, params?: URLSearchParams) => axios.get(url, {params}).then(responseBody), // or axios.get(url).then(response => response.data)
-    post: (url: string, body: {}) => axios.post(url, body).then(responseBody),
+    post: (url: string, body?: {}) => axios.post(url, body).then(responseBody),
     put: (url: string, body: {}) => axios.put(url, body).then(responseBody),
     delete: (url: string) => axios.delete(url).then(responseBody),
 }
@@ -75,6 +75,9 @@ const Account = {
 
 const Categories = {
     list: () => requests.get('category'),
+    add: (name: any) => requests.post('category', name),
+    update: (data: any) => requests.put('category', data),
+    delete: (id: number) => requests.delete(`category/${id}`) 
 }
 
 const Products = {

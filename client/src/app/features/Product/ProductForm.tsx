@@ -1,5 +1,6 @@
 import { Typography, Grid, Paper, Box, Button } from "@mui/material";
 import { useEffect, useState } from "react";
+import { Edit, Delete, AddCircleOutline } from "@mui/icons-material";
 import {  FieldValues, useForm } from "react-hook-form";
 import AppTextInput from "../../../app/components/AppTextInput";
 import agent from "../../api/agent";
@@ -7,11 +8,13 @@ import AppSelectList from "../../components/AppSelectList";
 import { Category } from "../../models/category";
 import { validationSchema } from "./productValidation";
 import {yupResolver} from '@hookform/resolvers/yup';
-import { useAppDispatch } from "../../store/configureStore";
+import { useAppDispatch, useAppSelector } from "../../store/configureStore";
 import { addProduct } from "./productSlice";
 import { Product, UpdateProduct } from "../../models/product";
 import AppDatePicker from "../../components/AppDatePicker";
 import { units } from "../../models/unit";
+import { categorySelector } from "../Category/categorySlice";
+import AddCategory from "../Category/AddCategory";
 
 interface Props {
     product?: UpdateProduct;
@@ -22,14 +25,11 @@ export default function ProductForm({product, cancelEdit}: Props) {
     const { control, reset, handleSubmit, watch, formState: {isDirty, isSubmitting} } = useForm({
         resolver: yupResolver<any>(validationSchema)
     });
-    const [cat, setCat] = useState<Category[] | null>(null);
-    const dispatch = useAppDispatch();
 
-    useEffect(() => {
-        agent.Categories.list().then(data => {
-            setCat(data);
-        });
-    }, [])
+    const [addCategory, setAddCategory] = useState(false);
+
+    const categories = useAppSelector(categorySelector.selectAll);
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         if (product && !isDirty) reset(product);
@@ -64,8 +64,17 @@ export default function ProductForm({product, cancelEdit}: Props) {
                 <Grid item xs={12} sm={6}>
                     <AppDatePicker control={control} name='date' label='Date' />
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                    <AppSelectList control={control} items={cat} name='categoryId' label='Category' />
+                <Grid wrap='nowrap' item xs={12} sm={6} >
+                    <AppSelectList style={{width: '80%'}} control={control} items={categories} name='categoryId' label='Category' />
+                    <Button 
+                        sx={{ marginLeft: '10px'}} 
+                        variant='contained' 
+                        color='inherit' 
+                        onClick={() => setAddCategory(true)} 
+                    >
+                        Add
+                    </Button>
+                    {addCategory && <AddCategory setAddCategory={setAddCategory} />}
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <AppTextInput control={control} name='totalPrice' label='Total Price' />
@@ -74,7 +83,7 @@ export default function ProductForm({product, cancelEdit}: Props) {
                     <AppTextInput control={control} name='quantity' label='quantity' />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <AppSelectList control={control} units={units} name='unit' label='Unit' />
+                    <AppSelectList style={{width: '100%'}} control={control} units={units} name='unit' label='Unit' />
                 </Grid>
                 {/* <Grid item xs={12}>
                     <AppTextInput control={control} name='pictureUrl' label='Image' />

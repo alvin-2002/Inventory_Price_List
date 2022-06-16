@@ -17,21 +17,23 @@ namespace API.Controllers
         private readonly InventoryContext _context;
         public CategoryController(InventoryContext context)
         {
+
             _context = context;   
         }
 
         [HttpPost]
-        public async Task<ActionResult<string>> CreateCategory(string name) {
+        public async Task<ActionResult<Category>> CreateCategory(AddCategoryDto categoryDto) {
             var user = await _context.Users
                             .Include(p => p.Categories)
                             .FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
 
-            user.Categories.Add(new Category{
-                CategoryName = name
-            });
+            var category = new Category {
+                CategoryName = categoryDto.CategoryName
+            };
+            user.Categories.Add(category);
 
             var result = await _context.SaveChangesAsync() > 0;
-            if (result) return Ok(name);
+            if (result) return Ok(category);
 
             return BadRequest(new ProblemDetails { Title = "Problem creating new category" });
         }
@@ -53,17 +55,20 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Category>>> GetCategories()
+        public async Task<ActionResult<List<CategoryDto>>> GetCategories()
         {
             var user = await _context.Users
                             .FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
             var categories = await _context.Categories.Where(u => u.UserId == user.Id).ToListAsync();
-                     
-            return Ok(categories);
+            var categoriesDto = categories.Select(c => new CategoryDto {
+                Id = c.Id,
+                CategoryName = c.CategoryName
+            }).ToList();
+            return Ok(categoriesDto);
         }
 
         [HttpPut]
-        public async Task<ActionResult<Category>> UpdateCategory(UpdateCategoryDto categoryDto)
+        public async Task<ActionResult<CategoryDto>> UpdateCategory(CategoryDto categoryDto)
         {
             var user = await _context.Users
                             .Include(u => u.Categories)
@@ -77,7 +82,7 @@ namespace API.Controllers
 
             var result = await _context.SaveChangesAsync() > 0;
 
-            if (result) return Ok(category);
+            if (result) return Ok(categoryDto);
 
             return BadRequest(new ProblemDetails{ Title = "Problem updating category"});
         }

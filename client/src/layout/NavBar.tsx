@@ -45,12 +45,19 @@ export default function ButtonAppBar() {
           </Typography>
         
         {user ? (
-          <div style={{display: 'flex', alignItems: 'center', columnGap: '7px'}}>
+          <div style={{display: 'flex', alignItems: 'center', columnGap: '13px'}}>
+            <Typography 
+              sx={upperNavStyle}
+              component={NavLink} 
+              to='/categories' 
+              mr={1.3}
+            >
+              Category
+            </Typography>
             <Typography 
               sx={upperNavStyle}
               component={NavLink} 
               to='/products' 
-              
             >
               Products
             </Typography>
