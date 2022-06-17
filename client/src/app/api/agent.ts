@@ -26,7 +26,7 @@ axios.interceptors.request.use((config: any) => {
 })
 
 axios.interceptors.response.use(async response => {
-    console.log('response')
+    
     return response;
 }, (error: AxiosError) => {
 
@@ -81,7 +81,7 @@ const Categories = {
 }
 
 const Products = {
-    list: () => requests.get('products'),
+    list: (params: URLSearchParams) => requests.get('products', params),
     detail: (id: number) => requests.get(`products/${id}`),
     create: (data: any) => requests.post('products', data),
     update: (data: any) => requests.put('products', data),

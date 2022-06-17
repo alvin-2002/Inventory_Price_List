@@ -18,3 +18,8 @@ export interface UpdateProduct {
     unit: number;
     categoryName: number | null;
 }
+
+export interface ProductParams {
+    searchTerm?: string;
+    categoryId?: number;
+}

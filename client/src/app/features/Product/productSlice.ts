@@ -1,23 +1,29 @@
 import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/toolkit";
-import { Product } from "../../models/product";
+import { Product, ProductParams } from "../../models/product";
 import agent from "../../api/agent";
 import { RootState } from "../../store/configureStore";
 
 interface ProductState {
-    products: Product[] | null;
+    // products: Product[] | null;
+    productsLoaded: boolean;
+    productParams: ProductParams;
 }
-
-// const initialState: ProductState = {
-//     products: null
-// }
 
 const productsAdapter = createEntityAdapter<Product>();
 
-export const getProductsAsync = createAsyncThunk<Product[]>(
+function getAxiosParams(productParams: ProductParams) {
+    const params = new URLSearchParams();
+    if (productParams.searchTerm) params.append('searchTerm', productParams.searchTerm);
+    if (productParams.categoryId) params.append('categoryId', productParams.categoryId.toString());
+    return params;
+}
+
+export const getProductsAsync = createAsyncThunk<Product[], void, {state: RootState}>(
     'product/getProductsAsync',
     async (_, thunkAPI) => {
+        const params = getAxiosParams(thunkAPI.getState().product.productParams);
         try {
-            const products = await agent.Products.list();
+            const products = await agent.Products.list(params);
             return products;
         } catch (error: any) {
             thunkAPI.rejectWithValue({error: error.data})
@@ -30,9 +36,19 @@ export const getProductsAsync = createAsyncThunk<Product[]>(
     }
 )
 
+function initParams() {
+    return {
+        searchTerm: '',
+        categoryId: 0
+    }
+}
+
 export const productSlice = createSlice({
     name: 'product',
-    initialState: productsAdapter.getInitialState(),
+    initialState: productsAdapter.getInitialState<ProductState>({
+        productsLoaded: false,
+        productParams: initParams()
+    }),
     reducers: {
         setProducts: (state, action) => {
             productsAdapter.setAll(state, action.payload);
@@ -42,6 +58,10 @@ export const productSlice = createSlice({
         },
         removeProduct: (state, action) => {
             productsAdapter.removeOne(state, action.payload);
+        }, 
+        setProductParams: (state, action) => {
+            state.productsLoaded = false;
+            state.productParams = {...state.productParams, ...action.payload}
         }
     },
     extraReducers: (builder) => {
@@ -51,10 +71,11 @@ export const productSlice = createSlice({
         })
         builder.addCase(getProductsAsync.fulfilled, (state, action) => {
             productsAdapter.setAll(state, action.payload);
+            state.productsLoaded = true;
         })
     }
 })
 
 export const productSelectors = productsAdapter.getSelectors((state: RootState) => state.product);
 
-export const { setProducts, addProduct, removeProduct } = productSlice.actions; 
+export const { setProducts, addProduct, removeProduct, setProductParams } = productSlice.actions; 

@@ -1,19 +1,29 @@
 import { Box, Typography, Button, TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
 import { useAppDispatch, useAppSelector } from "../../store/configureStore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProductForm from "./ProductForm";
-import { productSelectors, removeProduct } from "./productSlice";
+import { getProductsAsync, productSelectors, removeProduct, setProductParams } from "./productSlice";
 import {format} from 'date-fns';
 import agent from "../../api/agent";
 import { UpdateProduct } from "../../models/product";
+import ProductSearch from "./ProductSearch";
+import { categorySelector } from "../Category/categorySlice";
+import AppFilterDropDown from "../../components/AppFilterDropDown";
+import { Category } from "../../models/category";
 
 export default function ProductList() {
     const [editMode, setEditMode] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<UpdateProduct | undefined>(undefined);
 
     const dispatch = useAppDispatch();
+    const {productsLoaded} = useAppSelector(state => state.product);
+    const categories = useAppSelector(categorySelector.selectAll);
     const products = useAppSelector(productSelectors.selectAll);
+
+    function setFilter(value: any) {
+        dispatch(setProductParams({categoryId: value}));
+    }
     
     function cancelEdit() {
         if (selectedProduct) setSelectedProduct(undefined);
@@ -35,6 +45,10 @@ export default function ProductList() {
             .catch(error => console.log(error))
     }
 
+    useEffect(() => {
+        if (!productsLoaded) dispatch(getProductsAsync());
+    }, [productsLoaded, dispatch])
+
     
     if (editMode) return <ProductForm product={selectedProduct} cancelEdit={cancelEdit} />
 
@@ -44,6 +58,11 @@ export default function ProductList() {
             <Typography sx={{ p: 2 }} variant='h4'>Inventory</Typography>
             <Button onClick={() => setEditMode(true)} sx={{ m: 2 }} size='large' variant='contained'>Create</Button>
         </Box>
+        <Box  display='flex' flexWrap='wrap' columnGap='20px'>
+            <ProductSearch />
+            <AppFilterDropDown categories={categories} setCategory={setFilter} label='Category' />
+        </Box>
+  
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>

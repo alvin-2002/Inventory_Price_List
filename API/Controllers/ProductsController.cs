@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using API.Data;
 using API.DTOs;
 using API.Entities;
+using API.Extensions;
+using API.RequestHelpers;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -69,12 +71,16 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<ProductDto>>> GetProducts()
+        public async Task<ActionResult<List<ProductDto>>> GetProducts([FromQuery]ProductParams productParams)
         {
             var user = await _context.Users
                             .FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
 
-            var products = await _context.Products.Include(p => p.Category).Where(p => p.UserId == user.Id).ToListAsync();
+            var products = _context.Products
+                                .Include(p => p.Category)
+                                .Where(p => p.UserId == user.Id)
+                                .Filter(productParams.CategoryId)
+                                .Search(productParams.SearchTerm);
                      
             return products.Select(p => new ProductDto 
             {

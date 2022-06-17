@@ -18,7 +18,7 @@ interface Props {
 export default function AddCategory({setAddCategory}: Props) {
     const dispatch = useAppDispatch();
     const inputEl = useRef<HTMLInputElement>(null);
-    const {register,  formState: {errors}} = useForm<FormValues>({
+    const {register, formState: {errors}} = useForm<FormValues>({
         mode: 'all'
     });
 

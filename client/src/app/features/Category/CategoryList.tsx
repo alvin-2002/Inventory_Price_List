@@ -7,7 +7,7 @@ import agent from "../../api/agent";
 import AppNameInput from "../../components/AppNameInput";
 import { Category } from "../../models/category";
 import { useAppDispatch, useAppSelector } from "../../store/configureStore";
-import { getProductsAsync } from "../Product/productSlice";
+import { getProductsAsync, setProductParams } from "../Product/productSlice";
 import { addCategory, categorySelector, removeCategory } from "./categorySlice";
 
 
@@ -18,6 +18,7 @@ export default function CategoryList() {
     const [edit, setEdit] = useState(false);
     const [id, setId] = useState<number | null>(null);
     const [value, setValue] = useState('');
+    const [isDirty, setIsDirty] = useState(false);
 
     function handleDelete(id: number) {
         agent.Categories.delete(id)
@@ -32,7 +33,7 @@ export default function CategoryList() {
     }
 
     async function update() {
-        if (id !== null && value !== '') {
+        if (id !== null && value !== '' && isDirty) {
             const newCategory : Category = {
                 id: id,
                 categoryName: value
@@ -40,6 +41,7 @@ export default function CategoryList() {
             await agent.Categories.update(newCategory)
                 .then((data: Category) => {
                     dispatch(addCategory(data));
+                    dispatch(setProductParams({searchTerm: 'test', categoryId: 2}))
                     dispatch(getProductsAsync())
                 })
                 .catch(error => console.log(error));
@@ -51,6 +53,7 @@ export default function CategoryList() {
         setValue('');
         setId(null);
         setEdit(false);
+        setIsDirty(false);
     }
 
     return (
@@ -76,14 +79,14 @@ export default function CategoryList() {
                             >
                                 <TableCell component="th" scope="row">
                                     {(edit && id === category.id) ? 
-                                        <AppNameInput state={[value, setValue]} name='categoryName'/>
+                                        <AppNameInput setIsDirty={setIsDirty} state={[value, setValue]} name='categoryName'/>
                                         : 
                                         category.categoryName}
                                 </TableCell>
                                 <TableCell align="right">
                                     { (edit && id === category.id) ? 
                                         <>
-                                            <Button startIcon={<Check />} onClick={() =>update()} />
+                                            <Button disabled={!isDirty} startIcon={<Check />} onClick={() =>update()} />
                                             <Button color='error' startIcon={<CancelOutlined />} onClick={(() => cancelEdit())}  />
                                         </>
                                         :
