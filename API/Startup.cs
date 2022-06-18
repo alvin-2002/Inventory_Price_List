@@ -79,7 +79,7 @@ namespace API
             services.AddCors();
             
             services.AddIdentityCore<User>()
-                .AddRoles<Role>()
+                // .AddRoles<Role>()
                 .AddEntityFrameworkStores<InventoryContext>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(opt => 

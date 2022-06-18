@@ -19,14 +19,14 @@ namespace API.Data
                     Email = "bob@test.com"
                 };
                 await userManager.CreateAsync(user, "Pa$$w0rd");
-                await userManager.AddToRoleAsync(user, "Member");
+                // await userManager.AddToRoleAsync(user, "Member");
                 var user2 = new User
                 {
                     UserName = "alvin",
                     Email = "alvin@test.com"
                 };
                 await userManager.CreateAsync(user2, "Pa$$w0rd");
-                await userManager.AddToRoleAsync(user2, "Member");
+                // await userManager.AddToRoleAsync(user2, "Member");
             }
 
             // context.SaveChanges();

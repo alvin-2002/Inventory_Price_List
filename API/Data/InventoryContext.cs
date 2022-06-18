@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Data
 {
-    public class InventoryContext : IdentityDbContext<User, Role, int>
+    public class InventoryContext : DbContext
     {
         public InventoryContext(DbContextOptions options) : base(options)
         {
@@ -17,6 +17,7 @@ namespace API.Data
         }
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<User> Users { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -31,10 +32,16 @@ namespace API.Data
                 .HasForeignKey(u => u.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<Role>()
-                .HasData(
-                    new Role{Id = 1, Name = "Member", NormalizedName = "MEMBER"}
-                );
+            builder.Entity<User>()
+                .HasMany(s => s.Categories)
+                .WithOne()
+                .HasForeignKey(u => u.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // builder.Entity<Role>()
+            //     .HasData(
+            //         new Role{Id = 1, Name = "Member", NormalizedName = "MEMBER"}
+            //     );
         }
     }
 }
