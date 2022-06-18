@@ -5,15 +5,17 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { Category } from '../models/category';
+import { Shop } from '../models/shop';
 
 
 interface Props {
     categories?: Category[];
+    shops?: Shop[];
     setCategory: (value: any) => void;
     label: string;
 }
 
-export default function AppFilterDropDown({categories, setCategory, label}: Props) {
+export default function AppFilterDropDown({categories, shops, setCategory, label}: Props) {
   const [value, setValue] = React.useState('');
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -36,6 +38,12 @@ export default function AppFilterDropDown({categories, setCategory, label}: Prop
                 categories && categories.map(category => (
                     <MenuItem key={category.id} value={category.id}>{category.categoryName}, {category.id}</MenuItem>
                 )) 
+                
+            }
+            {
+              shops && shops.map(shop => (
+                <MenuItem key={shop.id} value={shop.id}>{shop.shopName}</MenuItem>
+              )) 
             }
         </Select>
       </FormControl>

@@ -15,6 +15,7 @@ function getAxiosParams(productParams: ProductParams) {
     const params = new URLSearchParams();
     if (productParams.searchTerm) params.append('searchTerm', productParams.searchTerm);
     if (productParams.categoryId) params.append('categoryId', productParams.categoryId.toString());
+    if (productParams.shopId) params.append('shopId', productParams.shopId.toString());
     return params;
 }
 
@@ -24,6 +25,7 @@ export const getProductsAsync = createAsyncThunk<Product[], void, {state: RootSt
         const params = getAxiosParams(thunkAPI.getState().product.productParams);
         try {
             const products = await agent.Products.list(params);
+            console.log(products);
             return products;
         } catch (error: any) {
             thunkAPI.rejectWithValue({error: error.data})
@@ -39,7 +41,8 @@ export const getProductsAsync = createAsyncThunk<Product[], void, {state: RootSt
 function initParams() {
     return {
         searchTerm: '',
-        categoryId: 0
+        categoryId: 0,
+        shopId: 0
     }
 }
 

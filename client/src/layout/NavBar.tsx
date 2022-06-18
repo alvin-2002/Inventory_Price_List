@@ -49,6 +49,14 @@ export default function ButtonAppBar() {
             <Typography 
               sx={upperNavStyle}
               component={NavLink} 
+              to='/shops' 
+              mr={1.3}
+            >
+              Shop
+            </Typography>
+            <Typography 
+              sx={upperNavStyle}
+              component={NavLink} 
               to='/categories' 
               mr={1.3}
             >

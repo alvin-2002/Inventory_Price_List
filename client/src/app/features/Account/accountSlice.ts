@@ -21,7 +21,7 @@ export const login = createAsyncThunk<User, FieldValues>(
             const userDto: User = await agent.Account.login(data);
             const { products, ...user} = userDto;
             localStorage.setItem('user', JSON.stringify(user));
-            if (products) thunkAPI.dispatch(setProducts(products));
+            // if (products) thunkAPI.dispatch(setProducts(products));
             return user;
         } catch (error: any) {
             return thunkAPI.rejectWithValue({ error: error });
@@ -38,7 +38,7 @@ export const getCurrentUser = createAsyncThunk<User> (
             const userDto = await agent.Account.currentUser();
             const { products, ...user} = userDto;
             localStorage.setItem('user', JSON.stringify(user));
-            if (products) thunkAPI.dispatch(setProducts(products));
+            // if (products) thunkAPI.dispatch(setProducts(products));
             return user;
         } catch (error: any) {
             return thunkAPI.rejectWithValue({error: error.data});

@@ -6,6 +6,7 @@ export interface Product {
     quantity: number;
     unit: string;
     categoryName?: string;
+    shopName?: string;
     pricePerUnit: number;
 }
 
@@ -16,10 +17,12 @@ export interface UpdateProduct {
     date: Date;
     quantity: number;
     unit: number;
-    categoryName: number | null;
+    categoryId: number | null;
+    shopId: number | null;
 }
 
 export interface ProductParams {
     searchTerm?: string;
     categoryId?: number;
+    shopId?: number;
 }

@@ -1,12 +1,14 @@
 import { FormControl, InputLabel, Select, MenuItem, FormHelperText } from "@mui/material";
 import { UseControllerProps, useController } from "react-hook-form";
 import { Category } from "../models/category";
+import { Shop } from "../models/shop";
 import { Unit } from "../models/unit";
 
 interface Props extends UseControllerProps {
     style: any;
     label: string;
-    items?: Category[] | null;
+    categories?: Category[] | null;
+    shops?: Shop[] | null;
     units?: Unit[];
 }
 
@@ -19,13 +21,16 @@ export default function AppSelectList(props: Props) {
             <InputLabel id="demo-simple-select-label">{props.label}</InputLabel>
             <Select
                 value={ 
-                    (props.items || props.units) ? field.value : ''
+                    (props.categories || props.units || props.shops) ? field.value : ''
                 }
                 label={props.label}
                 onChange={field.onChange}
             >
-                {props.items && props.items?.map((item, index) => (
+                {props.categories && props.categories?.map((item, index) => (
                     <MenuItem key={item.id} value={item.id}>{item.categoryName}</MenuItem>
+                ))}
+                {props.shops && props.shops?.map((shop, index) => (
+                    <MenuItem key={shop.id} value={shop.id}>{shop.shopName}</MenuItem>
                 ))}
                 {props.units && props.units?.map((unit, index) => (
                     <MenuItem key={unit.id} value={unit.id}>{unit.label}</MenuItem>

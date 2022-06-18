@@ -21,14 +21,16 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ShopDto>> CreateShop(string shopName)
+        public async Task<ActionResult<ShopDto>> CreateShop(AddShopDto shopDto)
         {
             var user = await _context.Users  
                                 .Include(u => u.Shops)
                                 .FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
 
+            if (string.IsNullOrEmpty(shopDto.ShopName)) return BadRequest(new ProblemDetails{Title = "Shop name cannot be null or empty"});
+
             var shop = new Shop{
-                ShopName = shopName
+                ShopName = shopDto.ShopName
             };
 
             user.Shops.Add(shop);

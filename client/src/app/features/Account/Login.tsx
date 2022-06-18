@@ -4,6 +4,8 @@ import { Link, useHistory } from "react-router-dom";
 import agent from "../../api/agent";
 import { useAppDispatch, useAppSelector } from "../../store/configureStore";
 import { getCategories } from "../Category/categorySlice";
+import { getProductsAsync } from "../Product/productSlice";
+import { getShops } from "../Shop/shopSlice";
 import { login } from "./accountSlice";
 
 
@@ -24,6 +26,8 @@ export default function Login() {
         try {
             await dispatch(login(data));
             await dispatch(getCategories());
+            await dispatch(getShops());
+            await dispatch(getProductsAsync());
             history.push('/');
         } catch (error: any) {
             handleApiError(error);

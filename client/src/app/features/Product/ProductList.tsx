@@ -11,6 +11,7 @@ import ProductSearch from "./ProductSearch";
 import { categorySelector } from "../Category/categorySlice";
 import AppFilterDropDown from "../../components/AppFilterDropDown";
 import { Category } from "../../models/category";
+import { shopSelector } from "../Shop/shopSlice";
 
 export default function ProductList() {
     const [editMode, setEditMode] = useState(false);
@@ -19,10 +20,14 @@ export default function ProductList() {
     const dispatch = useAppDispatch();
     const {productsLoaded} = useAppSelector(state => state.product);
     const categories = useAppSelector(categorySelector.selectAll);
+    const shops = useAppSelector(shopSelector.selectAll);
     const products = useAppSelector(productSelectors.selectAll);
 
     function setFilter(value: any) {
         dispatch(setProductParams({categoryId: value}));
+    }
+    function setFilterShop(value: any) {
+        dispatch(setProductParams({shopId: value}));
     }
     
     function cancelEdit() {
@@ -61,6 +66,7 @@ export default function ProductList() {
         <Box  display='flex' flexWrap='wrap' columnGap='20px'>
             <ProductSearch />
             <AppFilterDropDown categories={categories} setCategory={setFilter} label='Category' />
+            <AppFilterDropDown shops={shops} setCategory={setFilterShop} label='Shop' />
         </Box>
   
         <TableContainer component={Paper}>
@@ -70,11 +76,12 @@ export default function ProductList() {
                         {/* <TableCell>#</TableCell> */}
                         {/* <TableCell align="left">Product</TableCell> */}
                         <TableCell align="left">Name</TableCell>
+                        <TableCell align="center">Category</TableCell>
+                        <TableCell align="center">Shop</TableCell>
                         <TableCell align="center">Quantity</TableCell>
                         <TableCell align="center">Total Price</TableCell>
                         <TableCell align="center">Price</TableCell>
                         <TableCell align="center">Date</TableCell>
-                        <TableCell align="center">Category Name</TableCell>
                         <TableCell align="right"></TableCell>
                     </TableRow>
                 </TableHead>
@@ -94,11 +101,12 @@ export default function ProductList() {
                                 </Box>
                             </TableCell> */}
                             {/* <TableCell align="left">{product.name}</TableCell> */}
+                            <TableCell align="center">{product.categoryName}</TableCell>
+                            <TableCell align="center">{product.shopName}</TableCell>
                             <TableCell align="center">{product.quantity}</TableCell>
                             <TableCell align="center">${product.totalPrice}</TableCell>
                             <TableCell align="center">${product.pricePerUnit.toFixed(2)}/{product.unit}</TableCell>
                             <TableCell align="center">{format(new Date(product.date), 'dd/MM/yyyy')}</TableCell>
-                            <TableCell align="center">{product.categoryName}</TableCell>
                             <TableCell align="right">
                                 <Button startIcon={<Edit />} onClick={() => handleSelectedProduct(product.id)}/>
                                 <Button color='error' startIcon={<Delete />} onClick={() => handleDeleteProduct(product.id)}  />

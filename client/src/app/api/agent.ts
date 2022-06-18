@@ -80,6 +80,13 @@ const Categories = {
     delete: (id: number) => requests.delete(`category/${id}`) 
 }
 
+const Shop = {
+    list: () => requests.get('shop'),
+    add: (name: any) => requests.post('shop', name),
+    update: (data: any) => requests.put('shop', data),
+    delete: (id: number) => requests.delete(`shop/${id}`) 
+}
+
 const Products = {
     list: (params: URLSearchParams) => requests.get('products', params),
     detail: (id: number) => requests.get(`products/${id}`),
@@ -91,6 +98,7 @@ const Products = {
 const agent = {
     Account,
     Products,
+    Shop,
     Categories
 }
 

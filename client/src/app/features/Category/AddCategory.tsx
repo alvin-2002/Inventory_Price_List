@@ -24,7 +24,7 @@ export default function AddCategory({setAddCategory}: Props) {
 
     async function submitName() {
         if (inputEl.current?.value &&  inputEl.current?.value !== '') {
-            await agent.Categories.add({name: inputEl.current.value})
+            await agent.Categories.add({categoryName: inputEl.current.value})
                 .then((category: Category) => {
                     console.log(category)
                     dispatch(addCategory(category))

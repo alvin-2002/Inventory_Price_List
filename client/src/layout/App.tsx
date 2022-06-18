@@ -13,6 +13,9 @@ import { getCurrentUser } from '../app/features/Account/accountSlice';
 import ProductList from '../app/features/Product/ProductList';
 import { getCategories } from '../app/features/Category/categorySlice';
 import CategoryList from '../app/features/Category/CategoryList';
+import { getShops } from '../app/features/Shop/shopSlice';
+import ShopList from '../app/features/Shop/ShopList';
+import { getProductsAsync } from '../app/features/Product/productSlice';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -20,6 +23,8 @@ function App() {
   useEffect(() => {
     dispatch(getCurrentUser());
     dispatch(getCategories());
+    dispatch(getShops());
+    dispatch(getProductsAsync());
   }, [])
 
 
@@ -37,6 +42,7 @@ function App() {
           <Route path='/register' component={Register} />
           <Route path='/products' component={ProductList} />
           <Route path='/categories' component={CategoryList} />
+          <Route path='/shops' component={ShopList} />
         </Switch>
       </Container>
     </>

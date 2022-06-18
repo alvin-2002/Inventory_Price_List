@@ -3,13 +3,15 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { accountSlice } from "../features/Account/accountSlice";
 import { categorySlice } from "../features/Category/categorySlice";
 import { productSlice } from "../features/Product/productSlice";
+import { shopSlice } from "../features/Shop/shopSlice";
 
 
 export const store = configureStore({
     reducer: {
         account: accountSlice.reducer,
         product: productSlice.reducer,
-        category: categorySlice.reducer
+        category: categorySlice.reducer,
+        shop: shopSlice.reducer
     }
 })
 

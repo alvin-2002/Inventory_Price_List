@@ -13,8 +13,11 @@ import { addProduct } from "./productSlice";
 import { Product, UpdateProduct } from "../../models/product";
 import AppDatePicker from "../../components/AppDatePicker";
 import { units } from "../../models/unit";
-import { categorySelector } from "../Category/categorySlice";
+import { addCategory, categorySelector } from "../Category/categorySlice";
 import AddCategory from "../Category/AddCategory";
+import { addShop, shopSelector } from "../Shop/shopSlice";
+import AppDialogPopUp from "../../components/AppDialogPopUp";
+import { Shop } from "../../models/shop";
 
 interface Props {
     product?: UpdateProduct;
@@ -26,9 +29,11 @@ export default function ProductForm({product, cancelEdit}: Props) {
         resolver: yupResolver<any>(validationSchema)
     });
 
-    const [addCategory, setAddCategory] = useState(false);
+    const [addCategoryName, setAddCategoryName] = useState(false);
+    const [addShopName, setAddShopName] = useState(false);
 
     const categories = useAppSelector(categorySelector.selectAll);
+    const shops = useAppSelector(shopSelector.selectAll);
     const dispatch = useAppDispatch();
 
     useEffect(() => {
@@ -51,7 +56,28 @@ export default function ProductForm({product, cancelEdit}: Props) {
         }
     }
 
+    async function createCategory(value: string) {
+        if (value === '') return;
+        console.log(value);
+        await agent.Categories.add({categoryName: value})
+            .then((data: Category) => {
+                dispatch(addCategory(data));
+            })
+            .catch(error => console.log(error, value));
+    }
+    async function createShop(value: string) {
+        if (value === '') return;
+        await agent.Shop.add({shopName: value})
+            .then((data: Shop) => {
+                dispatch(addShop(data));
+            })
+            .catch(error => console.log(error, value));
+    }
+
     return (
+        <>
+        <AppDialogPopUp create={createCategory} isOpen={[addCategoryName, setAddCategoryName]} name='categoryName' label='Category' />
+        <AppDialogPopUp create={createShop} isOpen={[addShopName, setAddShopName]} name='shopName' label='Shop' />
         <Box component={Paper} sx={{p: 4}}>
             <Typography variant="h4" gutterBottom sx={{mb: 4}}>
                 Product Details
@@ -61,20 +87,32 @@ export default function ProductForm({product, cancelEdit}: Props) {
                 <Grid item xs={12} sm={12}>
                     <AppTextInput control={control} name='name' label='Product name' />
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                    <AppDatePicker control={control} name='date' label='Date' />
-                </Grid>
-                <Grid wrap='nowrap' item xs={12} sm={6} >
-                    <AppSelectList style={{width: '80%'}} control={control} items={categories} name='categoryId' label='Category' />
+                <Grid container item xs={12} sm={6} >
+                    <AppSelectList style={{width: '80%'}} control={control} categories={categories} name='categoryId' label='Category' />
                     <Button 
                         sx={{ marginLeft: '10px'}} 
                         variant='contained' 
                         color='inherit' 
-                        onClick={() => setAddCategory(true)} 
+                        onClick={() => setAddCategoryName(true)} 
                     >
                         Add
                     </Button>
-                    {addCategory && <AddCategory setAddCategory={setAddCategory} />}
+
+                </Grid>
+                <Grid container item xs={12} sm={6} >
+                    <AppSelectList style={{width: '80%'}} control={control} shops={shops} name='shopId' label='Shop' />
+                    <Button 
+                        sx={{ marginLeft: '10px'}} 
+                        variant='contained' 
+                        color='inherit' 
+                        onClick={() => setAddShopName(true)} 
+                    >
+                        Add
+                    </Button>
+    
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <AppDatePicker control={control} name='date' label='Date' />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <AppTextInput control={control} name='totalPrice' label='Total Price' />
@@ -85,9 +123,7 @@ export default function ProductForm({product, cancelEdit}: Props) {
                 <Grid item xs={12} sm={6}>
                     <AppSelectList style={{width: '100%'}} control={control} units={units} name='unit' label='Unit' />
                 </Grid>
-                {/* <Grid item xs={12}>
-                    <AppTextInput control={control} name='pictureUrl' label='Image' />
-                </Grid> */}
+       
             </Grid>
             <Box display='flex' justifyContent='space-between' sx={{mt: 3}}>
                 <Button variant='contained' color='inherit' onClick={cancelEdit}>Cancel</Button>
@@ -96,5 +132,6 @@ export default function ProductForm({product, cancelEdit}: Props) {
             </Box>
             </form>
         </Box>
+        </>
     )
 }

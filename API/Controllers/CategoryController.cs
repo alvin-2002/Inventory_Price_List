@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using API.Data;
 using API.DTOs;
@@ -26,6 +27,8 @@ namespace API.Controllers
             var user = await _context.Users
                             .Include(p => p.Categories)
                             .FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
+            
+            if (string.IsNullOrEmpty(categoryDto.CategoryName)) return BadRequest(new ProblemDetails{Title = "Category name cannot be null or empty"});
 
             var category = new Category {
                 CategoryName = categoryDto.CategoryName
