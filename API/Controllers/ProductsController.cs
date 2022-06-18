@@ -29,14 +29,19 @@ namespace API.Controllers
         public async Task<ActionResult<ProductDto>> CreateProduct(CreateProductDto productDto)
         {
             var user = await _context.Users
-                            .Include(u => u.Categories)
                             .FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
   
-            var category = await _context.Categories.Where(u => u.UserId == user.Id).FirstOrDefaultAsync(c => c.Id == productDto.CategoryId);
+            var category = await _context.Categories.Where(u => u.UserId == user.Id)
+                                        .FirstOrDefaultAsync(c => c.Id ==   productDto.CategoryId);
+
+            var shop = await _context.Shops.Where(u => u.UserId == user.Id)
+                                    .FirstOrDefaultAsync(c => c.Id == productDto.ShopId);
 
             if (category == null && productDto.CategoryId != null) return NotFound();
+            if (shop == null && productDto.ShopId != null) return NotFound();
 
             var categoryId = (category == null) ? null : (int?)category.Id;
+            var shopId = (shop == null) ? null : (int?)shop.Id;
 
             var product = new Product {
                 Name = productDto.Name,
@@ -45,6 +50,7 @@ namespace API.Controllers
                 Quantity = productDto.Quantity,
                 Unit = productDto.Unit,
                 CategoryId = categoryId,
+                ShopId = shopId,
                 UserId = user.Id
             };
             _context.Products.Add(product);
@@ -61,6 +67,7 @@ namespace API.Controllers
                     PricePerUnit = product.GetPricePerUnit(),
                     Quantity = product.Quantity,
                     CategoryName = product.Category == null ? null : product.Category.CategoryName,
+                    ShopName = product.Shop == null ? null : product.Shop.ShopName,
                     Unit = product.Unit.ToString()
                 };
                 
@@ -78,8 +85,9 @@ namespace API.Controllers
 
             var products = _context.Products
                                 .Include(p => p.Category)
+                                .Include(p => p.Shop)
                                 .Where(p => p.UserId == user.Id)
-                                .Filter(productParams.CategoryId)
+                                .Filter(productParams.CategoryId, productParams.ShopId)
                                 .Search(productParams.SearchTerm);
                      
             return products.Select(p => new ProductDto 
@@ -91,6 +99,7 @@ namespace API.Controllers
                 PricePerUnit = p.GetPricePerUnit(),
                 Quantity = p.Quantity,
                 CategoryName = p.Category == null ? null : p.Category.CategoryName,
+                ShopName = p.Shop == null ? null : p.Shop.ShopName,
                 Unit = p.Unit.ToString()
             }).ToList();
         }
@@ -99,7 +108,11 @@ namespace API.Controllers
         {
             var user = await _context.Users
                             .FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
-            var product = await _context.Products.Include(p => p.Category).Where(p => p.UserId == user.Id).FirstOrDefaultAsync(p => p.Id == id);
+            var product = await _context.Products
+                                .Include(p => p.Category)
+                                .Include(p => p.Shop)
+                                .Where(p => p.UserId == user.Id)
+                                .FirstOrDefaultAsync(p => p.Id == id);
 
             if (product == null) return NotFound();
 
@@ -111,6 +124,7 @@ namespace API.Controllers
                 TotalPrice = product.TotalPrice,
                 Quantity = product.Quantity,
                 CategoryId = product.CategoryId,
+                ShopId = product.ShopId,
                 Unit = product.Unit
             };
         }
@@ -142,13 +156,19 @@ namespace API.Controllers
 
             var category = await _context.Categories.Where(u => u.UserId == user.Id).FirstOrDefaultAsync(c => c.Id == productDto.CategoryId);
 
+            var shop = await _context.Shops.Where(u => u.UserId == user.Id)
+                                .FirstOrDefaultAsync(c => c.Id == productDto.ShopId);
+
             if (category == null && productDto.CategoryId != null) return NotFound();
+            if (shop == null && productDto.ShopId != null) return NotFound();
 
             var categoryId = (category == null) ? null : (int?)category.Id;
+            var shopId = (shop == null) ? null : (int?)shop.Id;
 
             product.Name = productDto.Name;
             product.CategoryId = productDto.CategoryId;
             product.Quantity = productDto.Quantity;
+            product.ShopId = productDto.ShopId;
             product.Unit = productDto.Unit;
             product.Date = productDto.Date;
             product.TotalPrice = productDto.TotalPrice;
@@ -166,6 +186,7 @@ namespace API.Controllers
                     PricePerUnit = product.GetPricePerUnit(),
                     Quantity = product.Quantity,
                     CategoryName = product.Category == null ? null : product.Category.CategoryName,
+                    ShopName = product.Shop == null ? null : product.Shop.ShopName,
                     Unit = product.Unit.ToString()
                 };
 

@@ -20,6 +20,7 @@ namespace API.DTOs
         [Range(1, Double.PositiveInfinity)]
         public decimal Quantity { get; set; }
         public int? CategoryId { get; set; }
+        public int? ShopId { get; set; }
         public Unit Unit { get; set; }
  
     }

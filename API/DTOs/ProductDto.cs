@@ -15,6 +15,7 @@ namespace API.DTOs
         public decimal Quantity { get; set; }
         public string Unit { get; set; }
         public string CategoryName { get; set; }
+        public string ShopName { get; set; }
         public decimal PricePerUnit { get; set; }
         
     }

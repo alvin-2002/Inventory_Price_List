@@ -9,5 +9,6 @@ namespace API.RequestHelpers
     {
         public string SearchTerm { get; set; }
         public int? CategoryId { get; set; }
+        public int? ShopId { get; set; }
     }
 }

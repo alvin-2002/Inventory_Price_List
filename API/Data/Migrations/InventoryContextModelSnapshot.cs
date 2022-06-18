@@ -90,7 +90,9 @@ namespace API.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Shop");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Shops");
                 });
 
             modelBuilder.Entity("API.Entities.User", b =>
@@ -178,11 +180,22 @@ namespace API.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("API.Entities.Shop", b =>
+                {
+                    b.HasOne("API.Entities.User", null)
+                        .WithMany("Shops")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("API.Entities.User", b =>
                 {
                     b.Navigation("Categories");
 
                     b.Navigation("Products");
+
+                    b.Navigation("Shops");
                 });
 #pragma warning restore 612, 618
         }

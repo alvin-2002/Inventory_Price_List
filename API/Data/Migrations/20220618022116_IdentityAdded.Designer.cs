@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(InventoryContext))]
-    [Migration("20220618003307_IdentityAdded")]
+    [Migration("20220618022116_IdentityAdded")]
     partial class IdentityAdded
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -92,7 +92,9 @@ namespace API.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Shop");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Shops");
                 });
 
             modelBuilder.Entity("API.Entities.User", b =>
@@ -180,11 +182,22 @@ namespace API.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("API.Entities.Shop", b =>
+                {
+                    b.HasOne("API.Entities.User", null)
+                        .WithMany("Shops")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("API.Entities.User", b =>
                 {
                     b.Navigation("Categories");
 
                     b.Navigation("Products");
+
+                    b.Navigation("Shops");
                 });
 #pragma warning restore 612, 618
         }

@@ -17,11 +17,12 @@ namespace API.Extensions
             return query.Where(p => p.Name.ToLower().Contains(lowerCaseSearch));
         }
 
-        public static IQueryable<Product> Filter(this IQueryable<Product> query, int? id)
+        public static IQueryable<Product> Filter(this IQueryable<Product> query, int? categoryId, int? shopId)
         {
-            if (id <= 0 || id == null) return query;
+            if (categoryId > 0 && categoryId != null) query = query.Where(p => p.CategoryId == categoryId);
+            if (shopId > 0 && shopId != null) query = query.Where(p => p.ShopId == shopId);
 
-            return query.Where(p => p.CategoryId == id);
+            return query;
         }
     }
 }
