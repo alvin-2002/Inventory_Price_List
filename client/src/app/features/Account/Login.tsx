@@ -43,10 +43,10 @@ export default function Login() {
 
     return (
         <Container component="main" sx={{
-            display: 'flex',
-            height: '80vh',
-            flexDirection: 'column',
-            justifyContent: 'center',
+            // display: 'flex',
+            // height: '80vh',
+            // flexDirection: 'column',
+            // justifyContent: 'center',
        
         }}>
             <Container maxWidth="xs" sx={{

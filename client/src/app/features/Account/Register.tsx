@@ -46,10 +46,10 @@ export default function Register() {
     
     return (
         <Container component="main" sx={{
-            display: 'flex',
-            height: '80vh',
-            flexDirection: 'column',
-            justifyContent: 'center',
+            // display: 'flex',
+            // height: '80vh',
+            // flexDirection: 'column',
+            // justifyContent: 'center',
        
         }}>
             <Container maxWidth="xs" sx={{
@@ -79,7 +79,7 @@ export default function Register() {
                         {...register('email', {
                             required: 'Email is required',
                             pattern: {
-                                value: /^\w+[\w-.]*@\w+((-\w+)|(\w*))\.[a-z]{2,3}$/,
+                                value: /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
                                 message: 'Not a valid email address'
                             }
                         })}
@@ -91,7 +91,13 @@ export default function Register() {
                         fullWidth
                         label="Password"
                         type="password"
-                        {...register('password', {required: 'Password is required'})}
+                        {...register('password', {
+                            required: 'Password is required',
+                            pattern: {
+                                value: /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*#?&^_-]).{8,}/,
+                                message: 'Password must contain at least 1 uppercase, 1 lowercase, 1 digit and 1 special character'
+                            }
+                        })}
                         error={!!errors.password}
                         helperText={errors?.password?.message}
                     />
