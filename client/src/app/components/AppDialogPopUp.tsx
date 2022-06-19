@@ -32,14 +32,14 @@ export default function AppDialogPopUp({name, isOpen, create, label}: Props) {
     }
 
     return (
-        <div style={{marginBottom: '40px'}}>
-        
+        <>
             <Dialog
                 open={open}
                 onClose={handleClose}
                 maxWidth={'sm'}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
+                sx={{height: '300px'}}
             >
                 <DialogTitle id="alert-dialog-title" sx={{pb: 0}}>
                     Create {label}
@@ -58,6 +58,6 @@ export default function AppDialogPopUp({name, isOpen, create, label}: Props) {
                 </DialogActions>
                 </form>
             </Dialog>
-        </div>
+        </>
     );
 }
