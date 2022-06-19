@@ -121,10 +121,10 @@ export default function ProductForm({product, cancelEdit}: Props) {
                     <AppDatePicker control={control} name='date' label='Date' />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <AppTextInput control={control} name='totalPrice' label='Total Price' />
+                    <AppTextInput type='number' control={control} name='totalPrice' label='Total Price' />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <AppTextInput control={control} name='quantity' label='quantity' />
+                    <AppTextInput type='number' control={control} name='quantity' label='Quantity' />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <AppSelectList style={{width: '100%'}} control={control} units={units} name='unit' label='Unit' />

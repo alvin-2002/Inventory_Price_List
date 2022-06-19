@@ -12,7 +12,9 @@ interface Props {
 }
 
 
+
 export default function SignedInMenu({isSignedIn} : Props) {
+  
   const history = useHistory();
   const {user} = useAppSelector(state => state.account);
   const dispatch = useAppDispatch();
@@ -43,6 +45,28 @@ export default function SignedInMenu({isSignedIn} : Props) {
     handleClose();
   }
 
+  const navLink = (id: number) => {
+    switch (id) {
+      case 0:
+        categories();
+        break;
+      case 1:
+        shops();
+        break;
+      case 2:
+        products();
+        break;
+    
+
+    }
+  }
+
+  const menusNav = [
+    {id: 0, name: 'Category'},
+    {id: 1, name: 'Shop'},
+    {id: 2, name: 'Product'},
+  ]
+
   return (
     <>
       <Button
@@ -62,12 +86,10 @@ export default function SignedInMenu({isSignedIn} : Props) {
         }}
       >
         {
-          isSignedIn && 
-          <>
-            <MenuItem onClick={shops}>Shop</MenuItem>
-            <MenuItem onClick={categories}>Category</MenuItem>
-            <MenuItem onClick={products}>Product</MenuItem>
-          </>
+          isSignedIn && menusNav.map((menu:any) => (
+            <MenuItem key={menu.id} onClick={() => navLink(menu.id)}>{menu.name}</MenuItem>
+          ))
+
         }
         <MenuItem onClick={logout}>Logout</MenuItem>
       </Menu>

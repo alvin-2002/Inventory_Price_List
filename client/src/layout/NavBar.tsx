@@ -41,7 +41,7 @@ export default function ButtonAppBar() {
             to='/' 
             exact
           >
-            Price Tracker
+            Home
           </Typography>
         
         {user ? (

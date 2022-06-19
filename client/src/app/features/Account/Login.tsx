@@ -37,9 +37,9 @@ export default function Login() {
         console.log('error', error);
     }
 
-    if (user) return (
-        <h1>User already Logged In.</h1>
-    )
+    // if (user) return (
+    //     <h1>User already Logged In.</h1>
+    // )
 
     return (
         <Container component="main" sx={{

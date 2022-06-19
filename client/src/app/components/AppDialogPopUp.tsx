@@ -38,7 +38,7 @@ export default function AppDialogPopUp({name, isOpen, create, label}: Props) {
                 open={open}
                 onClose={handleClose}
                 maxWidth={'sm'}
-                sx={{mb: 30}}
+                sx={{mb: 25}}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >

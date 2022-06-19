@@ -24,7 +24,7 @@ export default function AppDatePicker(props: Props) {
         renderInput={(params) => 
                 <TextField 
                     {...params} 
-                    type="date"    
+                    // type="date"    
                     variant='outlined'   
                     error={!!fieldState.error}
                     helperText={fieldState.error?.message}
