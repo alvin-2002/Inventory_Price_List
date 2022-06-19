@@ -16,7 +16,7 @@ interface Props {
 }
 
 export default function AppFilterDropDown({categories, shops, setCategory, label}: Props) {
-  const [value, setValue] = React.useState('');
+  const [value, setValue] = React.useState('0');
 
   const handleChange = (event: SelectChangeEvent) => {
     setValue(event.target.value as string);
@@ -33,12 +33,11 @@ export default function AppFilterDropDown({categories, shops, setCategory, label
           onChange={handleChange}
           sx={{ mb: 2 }}
         >
-            <MenuItem key={0} value={0} defaultChecked>All</MenuItem>
+            <MenuItem key={0} sx={{ fontWeight: 'bold' }} value={0} defaultChecked>All (default)</MenuItem>
             {
                 categories && categories.map(category => (
-                    <MenuItem key={category.id} value={category.id}>{category.categoryName}, {category.id}</MenuItem>
+                    <MenuItem key={category.id} value={category.id}>{category.categoryName}</MenuItem>
                 )) 
-                
             }
             {
               shops && shops.map(shop => (

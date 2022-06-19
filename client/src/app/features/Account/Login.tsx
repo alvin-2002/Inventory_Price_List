@@ -1,7 +1,6 @@
 import { Avatar, Box, Button, Checkbox, Container, CssBaseline, FormControlLabel, Grid, TextField, Typography } from "@mui/material";
 import { FieldValues, useForm } from "react-hook-form";
 import { Link, useHistory } from "react-router-dom";
-import agent from "../../api/agent";
 import { useAppDispatch, useAppSelector } from "../../store/configureStore";
 import { getCategories } from "../Category/categorySlice";
 import { getProductsAsync } from "../Product/productSlice";
@@ -79,10 +78,7 @@ export default function Login() {
                         error={!!errors.password}
                         helperText={errors?.password?.message}
                     />
-                    {/* <FormControlLabel
-                        control={<Checkbox value="remember" color="primary" />}
-                        label="Remember me"
-                    /> */}
+
                     <Button
                         type="submit"
                         fullWidth

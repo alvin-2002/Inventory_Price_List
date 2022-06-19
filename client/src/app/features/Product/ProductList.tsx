@@ -73,8 +73,6 @@ export default function ProductList() {
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                     <TableRow>
-                        {/* <TableCell>#</TableCell> */}
-                        {/* <TableCell align="left">Product</TableCell> */}
                         <TableCell align="left">Name</TableCell>
                         <TableCell align="center">Category</TableCell>
                         <TableCell align="center">Shop</TableCell>
@@ -94,13 +92,7 @@ export default function ProductList() {
                             <TableCell component="th" scope="row">
                                 {product.name}
                             </TableCell>
-                            {/* <TableCell align="left">
-                                <Box display='flex' alignItems='center'>
-                                    <img src={product.pictureUrl} alt={product.name} style={{ height: 50, marginRight: 20 }} />
-                                    <span>{product.name}</span>
-                                </Box>
-                            </TableCell> */}
-                            {/* <TableCell align="left">{product.name}</TableCell> */}
+                 
                             <TableCell align="center">{product.categoryName}</TableCell>
                             <TableCell align="center">{product.shopName}</TableCell>
                             <TableCell align="center">{product.quantity}</TableCell>

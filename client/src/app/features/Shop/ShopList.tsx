@@ -68,14 +68,14 @@ export default function ShopList() {
     }
 
     return (
-        <>
+        <div style={{maxWidth: '1000px', margin: '0 auto'}}>
             <AppDialogPopUp create={create} isOpen={[isCreate, setIsCreate]} name='shopName' label='Shop' />
-            <Box sx={{ maxWidth: 800  }} display='flex' justifyContent='space-between'>
-                <Typography sx={{ p: 2 }} variant='h4'>Category</Typography>
+            <Box display='flex' justifyContent='space-between'>
+                <Typography sx={{ p: 2 }} variant='h4'>Shop</Typography>
                 <Button sx={{ m: 2 }} size='large' variant='contained' onClick={() => setIsCreate(true)}>Create</Button>
             </Box>
-            <TableContainer sx={{ maxWidth: 800  }}   component={Paper}>
-                <Table sx={{ minWidth: 350, maxWidth: 800  }} aria-label="simple table">
+            <TableContainer component={Paper}>
+                <Table aria-label="simple table">
                 <TableHead>
                     <TableRow>
                         <TableCell align="left">Name</TableCell>
@@ -115,6 +115,6 @@ export default function ShopList() {
                 </TableBody>
                 </Table>
             </TableContainer>
-        </>
+        </div>
     )
 }

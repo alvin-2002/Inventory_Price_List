@@ -7,7 +7,10 @@ namespace API.Entities
 {
     public enum Unit
     {
+        g,
         kg,
-        unit
+        unit,
+        L,
+        ml
     }
 }

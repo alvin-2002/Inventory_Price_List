@@ -25,35 +25,40 @@ export default function AppDialogPopUp({name, isOpen, create, label}: Props) {
         setOpen(false);
     }
 
-    function handleCreate() {
+    function handleCreate(e: any) {
+        e.preventDefault();
         create(value);
         handleClose();
     }
 
     return (
-        <div>
-        <Dialog
-            open={open}
-            onClose={handleClose}
-            maxWidth={'sm'}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-        >
-            <DialogTitle id="alert-dialog-title" sx={{mb: 2}}>
-                Create {label}
-            </DialogTitle>
-            <DialogContent sx={{pt: 2}}>
-                <Box>
-                    <AppNameInput name={name} setIsDirty={setIsDirty} state={[value, setValue]} isEdit={false} />
-                </Box>
-            </DialogContent>
-            <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={() => handleCreate()} autoFocus>
-                Create
-            </Button>
-            </DialogActions>
-        </Dialog>
+        <div style={{marginBottom: '40px'}}>
+        
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                maxWidth={'sm'}
+                sx={{mb: 30}}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title" sx={{pb: 0}}>
+                    Create {label}
+                </DialogTitle>
+                <form onSubmit={handleCreate}>
+                <DialogContent sx={{pb: 0}}>
+                    <Box sx={{mt: 2}}>
+                        <AppNameInput name={name} setIsDirty={setIsDirty} state={[value, setValue]} isEdit={false} />
+                    </Box>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button type="submit">
+                        Create
+                    </Button>
+                </DialogActions>
+                </form>
+            </Dialog>
         </div>
     );
 }

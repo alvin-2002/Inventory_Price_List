@@ -1,6 +1,6 @@
 import { Typography, Grid, Paper, Box, Button } from "@mui/material";
 import { useEffect, useState } from "react";
-import { Edit, Delete, AddCircleOutline } from "@mui/icons-material";
+import { Edit, Delete, AddCircle } from "@mui/icons-material";
 import {  FieldValues, useForm } from "react-hook-form";
 import AppTextInput from "../../../app/components/AppTextInput";
 import agent from "../../api/agent";
@@ -14,21 +14,30 @@ import { Product, UpdateProduct } from "../../models/product";
 import AppDatePicker from "../../components/AppDatePicker";
 import { units } from "../../models/unit";
 import { addCategory, categorySelector } from "../Category/categorySlice";
-import AddCategory from "../Category/AddCategory";
 import { addShop, shopSelector } from "../Shop/shopSlice";
 import AppDialogPopUp from "../../components/AppDialogPopUp";
 import { Shop } from "../../models/shop";
+
 
 interface Props {
     product?: UpdateProduct;
     cancelEdit: () => void;
 }
 
+// const useStyles = makeStyles({
+//     cookieAlert: {
+//       "& .MuiAddCircleOutline-icon": {
+//         fontSize: 40
+//       }
+//     }
+//   });
+
 export default function ProductForm({product, cancelEdit}: Props) {
+
     const { control, reset, handleSubmit, watch, formState: {isDirty, isSubmitting} } = useForm({
         resolver: yupResolver<any>(validationSchema)
     });
-
+    // const classes = useStyles();
     const [addCategoryName, setAddCategoryName] = useState(false);
     const [addShopName, setAddShopName] = useState(false);
 
@@ -87,28 +96,25 @@ export default function ProductForm({product, cancelEdit}: Props) {
                 <Grid item xs={12} sm={12}>
                     <AppTextInput control={control} name='name' label='Product name' />
                 </Grid>
-                <Grid container item xs={12} sm={6} >
-                    <AppSelectList style={{width: '80%'}} control={control} categories={categories} name='categoryId' label='Category' />
+                <Grid container item xs={12} sm={6} wrap='nowrap' >
+                    <AppSelectList style={{width: '90%'}} control={control} categories={categories} name='categoryId' label='Category' />
                     <Button 
-                        sx={{ marginLeft: '10px'}} 
-                        variant='contained' 
-                        color='inherit' 
+                        sx={{ marginLeft: '5px', padding: '0px', justifyContent: 'center'}} 
+                        variant="text" 
+                        startIcon={<AddCircle sx={{color: '#2e7d32', transform: 'scale(1.5)', marginLeft: '10px'}} />}
                         onClick={() => setAddCategoryName(true)} 
-                    >
-                        Add
-                    </Button>
+                    />           
 
                 </Grid>
-                <Grid container item xs={12} sm={6} >
-                    <AppSelectList style={{width: '80%'}} control={control} shops={shops} name='shopId' label='Shop' />
+                <Grid container item xs={12} sm={6} wrap='nowrap' >
+                    <AppSelectList style={{width: '90%'}} control={control} shops={shops} name='shopId' label='Shop' />
                     <Button 
-                        sx={{ marginLeft: '10px'}} 
-                        variant='contained' 
-                        color='inherit' 
+                        sx={{ marginLeft: '5px', padding: '0px', justifyContent: 'center'}} 
+                        variant="text" 
+                        startIcon={<AddCircle sx={{color: '#2e7d32', transform: 'scale(1.5)', marginLeft: '10px'}} />}
                         onClick={() => setAddShopName(true)} 
-                    >
-                        Add
-                    </Button>
+                    />
+                    
     
                 </Grid>
                 <Grid item xs={12} sm={6}>

@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import SignedInMenu from './SignedInMenu';
-import { List, ListItem } from '@mui/material';
+import { Container, List, ListItem } from '@mui/material';
 import { Link, NavLink } from "react-router-dom";
 import { useEffect, useState } from 'react';
 import { useAppSelector } from '../app/store/configureStore';
@@ -45,33 +45,42 @@ export default function ButtonAppBar() {
           </Typography>
         
         {user ? (
-          <div style={{display: 'flex', alignItems: 'center', columnGap: '13px'}}>
-            <Typography 
-              sx={upperNavStyle}
-              component={NavLink} 
-              to='/shops' 
-              mr={1.3}
+          <>
+            <Box sx={{display: { xs: 'none', md: 'flex' }, alignItems: 'center', columnGap: '13px'}}>
+              <Typography 
+                sx={upperNavStyle}
+                component={NavLink} 
+                to='/shops' 
+                mr={1.3}
+              >
+                Shop
+              </Typography>
+              <Typography 
+                sx={upperNavStyle}
+                component={NavLink} 
+                to='/categories' 
+                mr={1.3}
+              >
+                Category
+              </Typography>
+              <Typography 
+                sx={upperNavStyle}
+                component={NavLink} 
+                to='/products' 
+              >
+                Products
+              </Typography>
+      
+              <SignedInMenu isSignedIn={false}/>
+            </Box>
+            <Box sx={{
+              display: { xs: 'block', md: 'none' },
+            }}
             >
-              Shop
-            </Typography>
-            <Typography 
-              sx={upperNavStyle}
-              component={NavLink} 
-              to='/categories' 
-              mr={1.3}
-            >
-              Category
-            </Typography>
-            <Typography 
-              sx={upperNavStyle}
-              component={NavLink} 
-              to='/products' 
-            >
-              Products
-            </Typography>
-    
-            <SignedInMenu />
-          </div>
+              <SignedInMenu isSignedIn={true}/>
+            </Box>
+          </>
+
              
           
           ) : (

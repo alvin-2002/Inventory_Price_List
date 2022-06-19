@@ -1,6 +1,6 @@
 
 import { Edit, Delete, AddCircleOutline, CancelOutlined, CheckCircleOutline, Check } from "@mui/icons-material";
-import { Typography, Button, TableContainer, TableCell, TableHead, TableRow, TableBody, Table, Paper } from "@mui/material";
+import { Typography, Button, TableContainer, TableCell, TableHead, TableRow, TableBody, Table, Paper, Container } from "@mui/material";
 import { Box } from "@mui/system";
 import { useState } from "react";
 import agent from "../../api/agent";
@@ -68,53 +68,53 @@ export default function CategoryList() {
     }
 
     return (
-        <>
+        <div style={{maxWidth: '1000px', margin: '0 auto'}}>
             <AppDialogPopUp create={create} isOpen={[isCreate, setIsCreate]} name='categoryName' label='Category' />
-            <Box sx={{ maxWidth: 800  }} display='flex' justifyContent='space-between'>
-                <Typography sx={{ p: 2 }} variant='h4'>Category</Typography>
-                <Button sx={{ m: 2 }} size='large' variant='contained' onClick={() => setIsCreate(true)}>Create</Button>
-            </Box>
-            <TableContainer sx={{ maxWidth: 800  }}   component={Paper}>
-                <Table sx={{ minWidth: 350, maxWidth: 800  }} aria-label="simple table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell align="left">Name</TableCell>
-                        <TableCell align="right"></TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {
-                        categories && categories.map((category) => (
-                            <TableRow
-                                key={category.id}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                            >
-                                <TableCell component="th" scope="row">
-                                    {(edit && id === category.id) ? 
-                                        <AppNameInput isEdit={true} setIsDirty={setIsDirty} state={[value, setValue]} name='categoryName'/>
-                                        : 
-                                        category.categoryName}
-                                </TableCell>
-                                <TableCell align="right">
-                                    { (edit && id === category.id) ? 
-                                        <>
-                                            <Button disabled={!isDirty} startIcon={<Check />} onClick={() =>update()} />
-                                            <Button color='error' startIcon={<CancelOutlined />} onClick={(() => cancelEdit())}  />
-                                        </>
-                                        :
-                                        <>
-                                            <Button startIcon={<Edit />} onClick={() => editMode(category)} />
-                                            <Button color='error' startIcon={<Delete />} onClick={() => handleDelete(category.id)}  />
-                                        </>
-                                    }
-                           
-                                </TableCell>
-                            </TableRow>
-                        ))
-                    }
-                </TableBody>
-                </Table>
-            </TableContainer>
-        </>
+                <Box display='flex' justifyContent='space-between'>
+                    <Typography sx={{ p: 2 }} variant='h4'>Category</Typography>
+                    <Button sx={{ m: 2 }} size='large' variant='contained' onClick={() => setIsCreate(true)}>Create</Button>
+                </Box>
+                <TableContainer  component={Paper}>
+                    <Table aria-label="simple table">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell align="left">Name</TableCell>
+                            <TableCell align="right"></TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {
+                            categories && categories.map((category) => (
+                                <TableRow
+                                    key={category.id}
+                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                >
+                                        <TableCell component="th" scope="row">
+                                            {(edit && id === category.id) ? 
+                                                <AppNameInput isEdit={true} setIsDirty={setIsDirty} state={[value, setValue]} name='categoryName'/>
+                                                : 
+                                                category.categoryName}
+                                        </TableCell>
+                                        <TableCell align="right" >
+                                            { (edit && id === category.id) ? 
+                                                <>
+                                                    <Button disabled={!isDirty} startIcon={<Check />} onClick={(() => update())} />
+                                                    <Button color='error' startIcon={<CancelOutlined />} onClick={(() => cancelEdit())}  />
+                                                </>
+                                                :
+                                                <>
+                                                    <Button startIcon={<Edit />} onClick={() => editMode(category)} />
+                                                    <Button color='error' startIcon={<Delete />} onClick={() => handleDelete(category.id)}  />
+                                                </>
+                                            }
+                                
+                                        </TableCell>
+                                </TableRow>
+                            ))
+                        }
+                    </TableBody> 
+                    </Table>
+                </TableContainer>
+        </div>
     )
 }

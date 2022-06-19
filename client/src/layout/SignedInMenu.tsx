@@ -7,7 +7,12 @@ import { useAppDispatch, useAppSelector } from '../app/store/configureStore';
 import { logoutUser } from '../app/features/Account/accountSlice';
 
 
-export default function SignedInMenu() {
+interface Props {
+    isSignedIn: boolean;
+}
+
+
+export default function SignedInMenu({isSignedIn} : Props) {
   const history = useHistory();
   const {user} = useAppSelector(state => state.account);
   const dispatch = useAppDispatch();
@@ -17,13 +22,25 @@ export default function SignedInMenu() {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
-    
     setAnchorEl(null);
   };
 
   const logout = () => {
     dispatch(logoutUser());
     history.push('/login');
+  }
+
+  const shops = () => {
+    history.push('/shops');
+    handleClose();
+  }
+  const categories = () => {
+    history.push('/categories');
+    handleClose();
+  }
+  const products = () => {
+    history.push('/products');
+    handleClose();
   }
 
   return (
@@ -44,8 +61,14 @@ export default function SignedInMenu() {
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>My account</MenuItem>
+        {
+          isSignedIn && 
+          <>
+            <MenuItem onClick={shops}>Shop</MenuItem>
+            <MenuItem onClick={categories}>Category</MenuItem>
+            <MenuItem onClick={products}>Product</MenuItem>
+          </>
+        }
         <MenuItem onClick={logout}>Logout</MenuItem>
       </Menu>
     </>
