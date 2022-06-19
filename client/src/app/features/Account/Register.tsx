@@ -34,7 +34,6 @@ export default function Register() {
     async function submitForm(data: FieldValues) {
         await agent.Account.register(data)
                 .then(() => {
-                    console.log('success');
                     history.push('/login');
                 })
                 .catch(error => handleApiErrors(error));
@@ -60,7 +59,7 @@ export default function Register() {
             }}>
 
                 <Typography component="h1" variant="h5">
-                    Sign in
+                    Sign Up
                 </Typography>
                 <Box component="form" onSubmit={handleSubmit(submitForm)} noValidate sx={{ mt: 1 }}>
                     <TextField
@@ -111,7 +110,7 @@ export default function Register() {
                         variant="contained"
                         sx={{ mt: 3, mb: 2 }}
                     >
-                        Sign In
+                        Sign Up
                     </Button>
                     <Grid container>
                         <Grid item>
