@@ -67,20 +67,24 @@ export default function ProductForm({product, cancelEdit}: Props) {
 
     async function createCategory(value: string) {
         if (value === '') return;
-        console.log(value);
-        await agent.Categories.add({categoryName: value})
-            .then((data: Category) => {
-                dispatch(addCategory(data));
-            })
-            .catch(error => console.log(error, value));
+        
+        try {
+            let category = await agent.Categories.add({categoryName: value});
+            dispatch(addCategory(category));
+        } catch (error) {
+            console.log(error);
+        }
     }
     async function createShop(value: string) {
         if (value === '') return;
-        await agent.Shop.add({shopName: value})
-            .then((data: Shop) => {
-                dispatch(addShop(data));
-            })
-            .catch(error => console.log(error, value));
+
+        try {
+            let shop: Shop = await agent.Shop.add({shopName: value});
+            dispatch(addShop(shop));
+        } catch (error) {
+            console.log(error);
+        }
+
     }
 
     return (

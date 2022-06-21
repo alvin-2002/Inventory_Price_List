@@ -9,7 +9,6 @@ using API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
@@ -36,8 +35,7 @@ namespace API.Controllers
             return new UserDto
             {
                 Email = user.Email,
-                Token = _tokenService.GenerateToken(user),
-                Products = await GetProducts(user.UserName)
+                Token = _tokenService.GenerateToken(user)
             };
         }
 
@@ -58,8 +56,6 @@ namespace API.Controllers
                 return ValidationProblem();
             }
 
-            // await _userManager.AddToRoleAsync(user, "Member");
-
             return StatusCode(201);
         }
 
@@ -73,29 +69,8 @@ namespace API.Controllers
             return new UserDto
             {
                 Email = user.Email,
-                Token = _tokenService.GenerateToken(user),
-                Products = await GetProducts(user.UserName)
+                Token = _tokenService.GenerateToken(user)
             };
-        }
-
-        private async Task<List<ProductDto>> GetProducts(String name)
-        {
-            var user = await _context.Users
-                            .Include(a => a.Products)
-                            .ThenInclude(a => a.Category)
-                            .FirstOrDefaultAsync(x => x.UserName == name);
-            // Console.WriteLine(user.);                
-            return user.Products.Select(p => new ProductDto 
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Date = p.Date,
-                TotalPrice = p.TotalPrice,
-                PricePerUnit = p.GetPricePerUnit(),
-                Quantity = p.Quantity,
-                CategoryName = p.Category == null ? null : p.Category.CategoryName,
-                Unit = p.Unit.ToString()
-            }).ToList();
         }
     }
 }

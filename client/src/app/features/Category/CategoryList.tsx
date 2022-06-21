@@ -11,8 +11,6 @@ import { useAppDispatch, useAppSelector } from "../../store/configureStore";
 import { getProductsAsync, setProductParams } from "../Product/productSlice";
 import { addCategory, categorySelector, removeCategory } from "./categorySlice";
 
-
-
 export default function CategoryList() {
     const categories = useAppSelector(categorySelector.selectAll);
     const dispatch = useAppDispatch();
@@ -40,12 +38,13 @@ export default function CategoryList() {
                 id: id,
                 categoryName: value
             }
-            await agent.Categories.update(newCategory)
-                .then((data: Category) => {
-                    dispatch(addCategory(data));
-                    dispatch(getProductsAsync())
-                })
-                .catch(error => console.log(error));
+            try {
+                let category: Category = await agent.Categories.update(newCategory);
+                dispatch(addCategory(category));
+                dispatch(getProductsAsync());
+            } catch (error) {
+                console.log(error);
+            }
         }
         cancelEdit();
     }
@@ -58,13 +57,13 @@ export default function CategoryList() {
     }
     async function create(value: string) {
         if (value === '') return;
-        console.log(value);
-        await agent.Categories.add({categoryName: value})
-            .then((data: Category) => {
-                dispatch(addCategory(data));
-                dispatch(getProductsAsync());
-            })
-            .catch(error => console.log(error, value));
+        try {
+            let category: Category = await agent.Categories.add({categoryName: value});
+            dispatch(addCategory(category));
+            dispatch(getProductsAsync());
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     return (

@@ -1,6 +1,7 @@
 import { Container, Typography, Box, TextField, Button, Grid } from "@mui/material";
 import { useForm, FieldValues } from "react-hook-form";
 import { Link, useHistory } from "react-router-dom";
+import { toast } from "react-toastify";
 import agent from "../../api/agent";
 import { useAppSelector } from "../../store/configureStore";
 
@@ -34,6 +35,7 @@ export default function Register() {
     async function submitForm(data: FieldValues) {
         await agent.Account.register(data)
                 .then(() => {
+                    toast.success('Registration successful - you can now login');
                     history.push('/login');
                 })
                 .catch(error => handleApiErrors(error));
@@ -100,10 +102,7 @@ export default function Register() {
                         error={!!errors.password}
                         helperText={errors?.password?.message}
                     />
-                    {/* <FormControlLabel
-                        control={<Checkbox value="remember" color="primary" />}
-                        label="Remember me"
-                    /> */}
+   
                     <Button
                         type="submit"
                         fullWidth

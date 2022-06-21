@@ -25,7 +25,6 @@ export const getProductsAsync = createAsyncThunk<Product[], void, {state: RootSt
         const params = getAxiosParams(thunkAPI.getState().product.productParams);
         try {
             const products = await agent.Products.list(params);
-            console.log(products);
             return products;
         } catch (error: any) {
             thunkAPI.rejectWithValue({error: error.data})

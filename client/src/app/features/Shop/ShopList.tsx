@@ -39,12 +39,13 @@ export default function ShopList() {
                 id: id,
                 shopName: value
             }
-            await agent.Shop.update(newShop)
-                .then((data: Shop) => {
-                    dispatch(addShop(data));
-                    dispatch(getProductsAsync());
-                })
-                .catch(error => console.log(error));
+            try {
+                let shop: Shop = await agent.Shop.update(newShop);
+                dispatch(addShop(shop));
+                dispatch(getProductsAsync());
+            } catch (error) {
+                console.log(error);
+            }
         }
         cancelEdit();
     }
@@ -58,13 +59,13 @@ export default function ShopList() {
 
     async function create(value: string) {
         if (value === '') return;
-        console.log(value);
-        await agent.Shop.add({shopName: value})
-            .then((data: Shop) => {
-                dispatch(addShop(data));
-                dispatch(getProductsAsync());
-            })
-            .catch(error => console.log(error, value));
+        try {
+            let shop: Shop = await agent.Shop.add({shopName: value});
+            dispatch(addShop(shop));
+            dispatch(getProductsAsync());
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     return (

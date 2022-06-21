@@ -20,7 +20,7 @@ axios.interceptors.request.use((config: any) => {
         config.headers = {};
     }
     if (token) config.headers.Authorization = `Bearer ${token}`;
-    // console.log('sdfsd', config.headers.Authorization)
+
     return config;
 
 })
@@ -45,14 +45,19 @@ axios.interceptors.response.use(async response => {
                 }
                 throw modelStateError.flat();
             }
-            console.log('data', data.title)
             throw data.title;
-            break;
         
         case 401: 
             toast.error(data.title);
             throw data.title;
+
+        case 403:
+            toast.error("You are not authorized to do that!");
             break;
+        
+        case 500: 
+            toast.error("Sorry Internal Server");
+            throw data.title;
     
         default:
             break;
