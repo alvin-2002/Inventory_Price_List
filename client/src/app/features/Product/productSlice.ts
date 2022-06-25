@@ -57,9 +57,11 @@ export const productSlice = createSlice({
         },
         addProduct: (state, action) => {
             productsAdapter.upsertOne(state, action.payload);
+            state.productsLoaded = false;
         },
         removeProduct: (state, action) => {
             productsAdapter.removeOne(state, action.payload);
+            state.productsLoaded = false;
         }, 
         setProductParams: (state, action) => {
             state.productsLoaded = false;
@@ -68,7 +70,6 @@ export const productSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(getProductsAsync.rejected, (state, action) => {
-            console.log('prod fail', action.payload)
             throw action.payload;
         })
         builder.addCase(getProductsAsync.fulfilled, (state, action) => {

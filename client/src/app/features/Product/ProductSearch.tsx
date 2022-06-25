@@ -17,7 +17,6 @@ export default function ProductSearch() {
         <TextField 
             label='Search products'
             variant='outlined'
-            
             sx={{ mb: 2 }}
             value={searchTerm || ''}
             onChange={(event: any) => {

@@ -11,16 +11,17 @@ import { Shop } from '../models/shop';
 interface Props {
     categories?: Category[];
     shops?: Shop[];
-    setCategory: (value: any) => void;
+    setFilter: (value: any) => void;
+    currentFilter: number;
     label: string;
 }
 
-export default function AppFilterDropDown({categories, shops, setCategory, label}: Props) {
-  const [value, setValue] = React.useState('0');
+export default function AppFilterDropDown({categories, shops, currentFilter, setFilter, label}: Props) {
+  const [value, setValue] = React.useState(currentFilter.toString());
 
   const handleChange = (event: SelectChangeEvent) => {
     setValue(event.target.value as string);
-    setCategory(event.target.value);
+    setFilter(event.target.value);
   };
 
   return (
@@ -33,7 +34,7 @@ export default function AppFilterDropDown({categories, shops, setCategory, label
           onChange={handleChange}
           sx={{ mb: 2 }}
         >
-            <MenuItem key={0} sx={{ fontWeight: 'bold' }} value={0} defaultChecked>All (default)</MenuItem>
+            <MenuItem key={0} sx={{ fontWeight: 'bold' }} value={0}>All (default)</MenuItem>
             {
                 categories && categories.map(category => (
                     <MenuItem key={category.id} value={category.id}>{category.categoryName}</MenuItem>

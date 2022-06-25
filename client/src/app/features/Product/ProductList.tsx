@@ -10,7 +10,6 @@ import { UpdateProduct } from "../../models/product";
 import ProductSearch from "./ProductSearch";
 import { categorySelector } from "../Category/categorySlice";
 import AppFilterDropDown from "../../components/AppFilterDropDown";
-import { Category } from "../../models/category";
 import { shopSelector } from "../Shop/shopSlice";
 
 export default function ProductList() {
@@ -18,15 +17,15 @@ export default function ProductList() {
     const [selectedProduct, setSelectedProduct] = useState<UpdateProduct | undefined>(undefined);
 
     const dispatch = useAppDispatch();
-    const {productsLoaded} = useAppSelector(state => state.product);
+    const {productsLoaded, productParams} = useAppSelector(state => state.product);
     const categories = useAppSelector(categorySelector.selectAll);
     const shops = useAppSelector(shopSelector.selectAll);
     const products = useAppSelector(productSelectors.selectAll);
 
-    function setFilter(value: any) {
+    function setFilterCategory(value: number) {
         dispatch(setProductParams({categoryId: value}));
     }
-    function setFilterShop(value: any) {
+    function setFilterShop(value: number) {
         dispatch(setProductParams({shopId: value}));
     }
     
@@ -65,8 +64,8 @@ export default function ProductList() {
         </Box>
         <Box  display='flex' flexWrap='wrap' columnGap='20px'>
             <ProductSearch />
-            <AppFilterDropDown categories={categories} setCategory={setFilter} label='Category' />
-            <AppFilterDropDown shops={shops} setCategory={setFilterShop} label='Shop' />
+            <AppFilterDropDown currentFilter={productParams.categoryId!} categories={categories} setFilter={setFilterCategory} label='Category' />
+            <AppFilterDropDown currentFilter={productParams.shopId!} shops={shops} setFilter={setFilterShop} label='Shop' />
         </Box>
   
         <TableContainer component={Paper}>
